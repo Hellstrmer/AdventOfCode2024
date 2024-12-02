@@ -1,5 +1,5 @@
 ﻿
-namespace AdventOfCode._2024.Day1
+namespace AdventOfCode._2024
 {
     internal class Day1
     {
@@ -33,8 +33,8 @@ namespace AdventOfCode._2024.Day1
 
             foreach (string d in Inputs)
             {
-                string f = d.Substring(0, 5).Trim();
-                string l = d.Substring(6).Trim();
+                string f = d.Substring(0, d.IndexOf(' ')).Trim();
+                string l = d.Substring(d.IndexOf(' ') + 1).Trim();
                 First.Add(Int32.Parse(f));
                 Second.Add(Int32.Parse(l));
             }
