@@ -8,4 +8,5 @@ Day1.SecondStar();*/
 
 Day2 Day2 = new Day2();
 
-Day2.FirstStar();
+//Day2.FirstStar();
+Day2.SecondStar();

@@ -8,20 +8,20 @@ namespace AdventOfCode._2024
         public string ReadFile()
         {
             string input = "";
-            bool example = true;
+            bool example = false;
             if (example)
             {
-                input = File.ReadAllText("C:\\Users\\clj608\\Source\\Repos\\Hellstrmer\\AdventOfCode2025\\2024\\Day2\\Example.txt");
-            } 
+                input = File.ReadAllText("C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day2\\Example.txt");
+            }
             else
             {
-                input = File.ReadAllText("C:\\Users\\clj608\\Source\\Repos\\Hellstrmer\\AdventOfCode2025\\2024\\Day2\\Input.txt");
+                input = File.ReadAllText("C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day2\\Input.txt");
             }
             input = input.Trim();
             return input;
         }
 
-        public void FirstStar() 
+        public void FirstStar()
         {
             string message = ReadFile();
 
@@ -36,37 +36,30 @@ namespace AdventOfCode._2024
             string t = null;
             bool up = false;
             bool down = false;
-            int t0 = 0;
-            int t1 = 0;
+            int tNext = 0;
+            int tCurrent = 0;
 
             foreach (string d in Inputs)
             {
                 level += 1;
                 Data.Add(new List<int>());
-               
-                find = d.Substring(0, d.IndexOf(" "));
-                //Console.WriteLine(findremove);
-                //find = d.Substring(d.IndexOf(find), d.IndexOf(" "));
-
 
                 for (int i = 0; i < d.Length; i++)
                 {
                     Numb = false;
-                    if (i < d.Length -1)
+                    if (i < d.Length - 1)
                     {
                         if (d[i].ToString() != " " && d[i + 1].ToString() != " ")
                         {
                             t += d[i].ToString() + d[i + 1].ToString();
                             i += 1;
-                            //Console.WriteLine("Index = " + i + " " + t);
-                        } 
+                        }
                         else
                         {
                             t = d[i].ToString();
-                            //Console.WriteLine("Index in else =" + i + " " + t);
                         }
-                        
-                    } else
+                    }
+                    else
                     {
                         t = d[i].ToString();
                     }
@@ -78,105 +71,229 @@ namespace AdventOfCode._2024
                 }
             }
 
-
-            for( int i = 0; i < Data.Count; i++)
+            for (int i = 0; i < Data.Count; i++)
             {
                 up = false;
                 down = false;
-                t0 = 0;
-                t1 = 0;
+                tNext = 0;
+                tCurrent = 0;
                 for (int j = 0; j < Data[i].Count; j++)
-                {                    
+                {
+                    if (j == 0)
+                    {
+                        if (Data[i][j + 1] > Data[i][j])
+                        {
+                            up = true;
+                            down = false;
+                        }
+                        else if (Data[i][j + 1] < Data[i][j])
+                        {
+                            down = true;
+                            up = false;
+                        }
+                        else
+                        {
+                            up = false;
+                            down = false;
+                            break;
+                        }
+                        if (i == 49)
+                        {
+                            Console.WriteLine(Data[i][j]);
+                            j = j;
+                            i = i;
+                        }
+                    }
+
                     if (j < Data[i].Count - 1)
                     {
-                        if ((j == 0 || up && !down) && Data[i][j + 1] > Data[i][j])
+                        if (up && !down)
                         {
-                            t0 = Data[i][j + 1];
-                            t1 = Data[i][j];
-                            up = true;
-                            if (t0 >= t1 + 3
-                                && t0 >= t1 + 1 && up && !down)
+                            tNext = Data[i][j + 1];
+                            tCurrent = Data[i][j];
+                            if (tNext > tCurrent + 3
+                                && tNext > tCurrent + 1 && up && !down || tNext < tCurrent || tNext == tCurrent)
                             {
-                                //Console.WriteLine(Data[i]);
-                                i += 1;
-                                j = 0;
+                                up = false;
                                 break;
                             }
                         }
-                        else if ((j == 0 || down && !up) &&Data[i][j + 1] < Data[i][j])
+                        if (down && !up)
                         {
-                            t0 = Data[i][j + 1];
-                            t1 = Data[i][j];
-                            down = true;
-                            if (t0 <= t1 -3
-                                && t0 <= t1 - 1 && down && !up)
+
+                            tNext = Data[i][j + 1];
+                            tCurrent = Data[i][j];
+                            if (tNext < tCurrent - 3
+                                && tNext < tCurrent - 1 && down && !up || tNext > tCurrent || tNext == tCurrent)
                             {
-                                //Console.WriteLine(Data[i]);
-                                i += 1;
-                                j = 0;
+                                down = false;
                                 break;
                             }
                         }
                     }
-                    else if (j == Data[i].Count - 1)
+                    if (j == Data[i].Count - 1)
                     {
-                        t0 = t0;
-                        t1 = t1;
+                        tNext = tNext;
+                        tCurrent = tCurrent;
                         up = false;
                         down = false;
-                        //Console.WriteLine(Data[i][0]);
-                        //Console.WriteLine("Level: " + i + ",: " + Data[i][j]);
                         numbOfResult += 1;
-                        Console.WriteLine("Numbers = " + numbOfResult + " Level = " + i + " t0: " + t0 + " t1 " + t1);
                     }
-
-                    //Console.WriteLine("Level: " + i + ",: " + j);
-
                 }
             }
-
             Console.WriteLine("Numbers = " + numbOfResult);
-
-
         }
 
         public void SecondStar()
         {
             string message = ReadFile();
-
             List<string> Inputs = message.Split("\r\n").ToList();
-
-            List<int> First = new List<int>();
-            List<int> Second = new List<int>();
-            List<int> Result = new List<int>();
-            int ResultInt = 0;
-            int NumberOfMatch = 0;
+            List<List<int>> Data = new List<List<int>>();
+            string find = null;
+            int numbOfResult = 0;
+            bool Numb;
+            int NumbOut;
+            int level = 0;
+            string t = null;
+            bool up = false;
+            bool down = false;
+            int tNext = 0;
+            int tSafe = 0;
+            int tCurrent = 0;
 
             foreach (string d in Inputs)
             {
-                string f = d.Substring(0, d.IndexOf(' ')).Trim();
-                string l = d.Substring(d.IndexOf(' ') + 1).Trim();
-                First.Add(Int32.Parse(f));
-                Second.Add(Int32.Parse(l));
-            }
+                level += 1;
+                Data.Add(new List<int>());
+                t = "";
 
-            for (int i = 0; i < First.Count; i++)
-            {
-                NumberOfMatch = 0;
-               for(int j = 0; j < Second.Count; j++)
+                for (int i = 0; i < d.Length; i++)
                 {
-                    if (First[i] == Second[j])
+                    Numb = false;
+                    if (i < d.Length - 1)
                     {
-                        NumberOfMatch += 1;
+                        if (d[i].ToString() != " " && d[i + 1].ToString() != " ")
+                        {
+                            t += d[i].ToString() + d[i + 1].ToString();
+                            i += 1;
+                        }
+                        else
+                        {
+                            t = d[i].ToString();
+                        }
+                    }
+                    else
+                    {
+                        t = d[i].ToString();
+                    }
+                    Numb = int.TryParse(t, out NumbOut);
+                    if (Numb)
+                    {
+                        Data[level - 1].Add(NumbOut);
                     }
                 }
-                Result.Add(First[i] * NumberOfMatch);
             }
-            foreach (int i in Result)
+
+            for (int i = 0; i < Data.Count; i++)
             {
-                ResultInt += i;
+                up = false;
+                down = false;
+                tNext = 0;
+                tCurrent = 0;
+                for (int j = 0; j < Data[i].Count; j++)
+                {
+                    if (j == 0)
+                    {
+                        if (Data[i][j + 1] > Data[i][j])
+                        {
+                            up = true;
+                            down = false;
+                        }
+                        else if (Data[i][j + 1] < Data[i][j])
+                        {
+                            down = true;
+                            up = false;
+                        }
+                        else
+                        {
+                            up = false;
+                            down = false;
+                            break;
+                        }
+                    }
+
+                    if (j < Data[i].Count - 1)
+                    {
+                        if (up && !down)
+                        {
+                            tNext = Data[i][j + 1];
+                            tCurrent = Data[i][j];
+                            if (tNext > tCurrent + 3
+                                && tNext > tCurrent + 1 && up && !down || tNext < tCurrent || tNext == tCurrent)
+                            {
+                                if (j < Data[i].Count - 2)
+                                {
+                                    if (Data[i][j + 2] > tCurrent + 3
+                                        && Data[i][j + 2] > tCurrent + 1 && up && !down && Data[i][j + 1] != tCurrent) 
+                                    {
+                                        tSafe += 2;                                        
+                                    }
+                                    if (Data[i][j + 1] < tCurrent || Data[i][j + 1] == tCurrent)
+                                    {
+                                        
+                                        tSafe += 1;                                        
+                                    }
+                                }
+                            }                                                     
+                                if (tSafe > 1)
+                                {                                    
+                                    tSafe = 0;
+                                    up = false;
+                                    break;
+                                }                              
+                        }
+                        if (down && !up)
+                        {
+                            tNext = Data[i][j + 1];
+                            tCurrent = Data[i][j];
+                            if (tNext < tCurrent - 3
+                                && tNext < tCurrent - 1 && down && !up || tNext > tCurrent || tNext == tCurrent)
+                            {
+                                if (j < Data[i].Count - 2)
+                                {
+                                    if (Data[i][j + 2] < tCurrent + 3
+                                        && Data[i][j + 2] < tCurrent - 1 && down && !up && Data[i][j + 1] != tCurrent)
+                                    {
+                                        Console.WriteLine("Level = " + i + " tCurrent " + tCurrent + " tNext: " + tNext + " Next Next " + Data[i][j + 2]);
+                                        tSafe += 2;
+                                    }
+                                    if (Data[i][j + 1] > tCurrent || Data[i][j + 1] == tCurrent)
+                                    {
+                                        Console.WriteLine("Level = " + i + " tCurrent " + tCurrent + " tNext: " + tNext);
+                                        tSafe += 1;
+                                    }
+                                }
+                                if (tSafe > 1)
+                                {
+                                    tSafe = 0;
+                                    down = false;
+                                    break;
+                                }
+                            }                            
+                        }
+                    }
+                    if (j == Data[i].Count - 1)
+                    {
+                        tNext = tNext;
+                        tCurrent = tCurrent;
+                        up = false;
+                        down = false;
+                        numbOfResult += 1;
+                    }
+
+                }
             }
-            Console.WriteLine(ResultInt);
+            Console.WriteLine("Numbers = " + numbOfResult);
         }
     }
 }
