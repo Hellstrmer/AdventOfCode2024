@@ -14,4 +14,7 @@ Day2.SecondStar();*/
 
 Day3 Day3 = new Day3();
 
+Console.WriteLine("Part1: ");
 Day3.FirstStar();
+Console.WriteLine("Part2: ");
+Day3.SecondStar();

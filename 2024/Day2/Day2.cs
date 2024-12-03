@@ -4,17 +4,10 @@
     {
         public string ReadFile()
         {
-            string input;
             bool example = false;
-            if (example)
-            {
-                input = File.ReadAllText("C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day2\\Example.txt");
-            }
-            else
-            {
-                input = File.ReadAllText("C:\\Users\\clj608\\Source\\Repos\\Hellstrmer\\AdventOfCode2025\\2024\\Day2\\Input.txt");
-            }
-            input = input.Trim();
+            string input = File.ReadAllText(example
+                ? "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day2\\Example.txt"
+                : "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day2\\Input.txt").Trim();
             return input;
         }
         public void FirstStar()
