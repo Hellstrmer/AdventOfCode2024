@@ -7,6 +7,11 @@ Day1.FirstStar();
 Day1.SecondStar();*/
 
 Day2 Day2 = new Day2();
+/*Console.WriteLine("Part1: ");
+Day2.FirstStar();
+Console.WriteLine("Part2: ");
+Day2.SecondStar();*/
 
-//Day2.FirstStar();
-Day2.SecondStar();
+Day3 Day3 = new Day3();
+
+Day3.FirstStar();
