@@ -3,21 +3,19 @@ namespace AdventOfCode._2024
 {
     internal class Day1
     {
-        public string ReadFile()
+        public List<string> ReadFile()
         {
             bool example = false;
             string input = File.ReadAllText(example
-                ? "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day1\\Example.txt"
-                : "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day1\\Input.txt").Trim();
-            return input;
+                ? "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day4\\Example.txt".Trim()
+                : "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day4\\Input.txt").Trim();
+            List<string> Inputs = input.Split("\r\n").ToList();
+            return Inputs;
         }
 
-        public void FirstStar() 
+        public void FirstStar()
         {
-            string message = ReadFile();
-
-            List<string> Inputs = message.Split("\r\n").ToList();
-
+            List<string> Inputs = ReadFile();
             List<int> First = new List<int>();
             List<int> Second = new List<int>();
             List<int> Result = new List<int>();
@@ -57,15 +55,12 @@ namespace AdventOfCode._2024
 
         public void SecondStar()
         {
-            string message = ReadFile();
-
-            List<string> Inputs = message.Split("\r\n").ToList();
-
+            List<string> Inputs = ReadFile();
             List<int> First = new List<int>();
             List<int> Second = new List<int>();
             List<int> Result = new List<int>();
             int ResultInt = 0;
-            int NumberOfMatch = 0;
+            int NumberOfMatch;
 
             foreach (string d in Inputs)
             {

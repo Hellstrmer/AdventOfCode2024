@@ -2,13 +2,14 @@
 {
     internal class Day2
     {
-        public string ReadFile()
+        public List<string> ReadFile()
         {
             bool example = false;
             string input = File.ReadAllText(example
-                ? "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day2\\Example.txt"
-                : "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day2\\Input.txt").Trim();
-            return input;
+                ? "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day4\\Example.txt".Trim()
+                : "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day4\\Input.txt").Trim();
+            List<string> Inputs = input.Split("\r\n").ToList();
+            return Inputs;
         }
         public void FirstStar()
         {
@@ -173,8 +174,7 @@
 
         public List<List<int>> sort()
         {
-            string message = ReadFile();
-            List<string> Inputs = message.Split("\r\n").ToList();
+            List<string> Inputs = ReadFile();
             List<List<int>> Data = [];
             bool Numb;
             int level = 0;
