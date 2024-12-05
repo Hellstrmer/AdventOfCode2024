@@ -72,7 +72,7 @@ namespace AdventOfCode._2024
                 {
                     break;
                 }
-            }            
+            }
             return Total;
         }
 
@@ -127,15 +127,12 @@ namespace AdventOfCode._2024
                     string l = d.Substring(d.IndexOf('|') + 1).Trim();
                     First.Add(Int32.Parse(f));
                     Second.Add(Int32.Parse(l));
-                    //Console.WriteLine("Res: " + f + " | " + l);
-                    //Console.WriteLine("Last: " + l);
                 }
                 else if (d.IndexOf(",") != -1)
                 {
                     List<string> tPath = d.Split(',').ToList();
-                    ResultInt += sortList(false, tPath, First, Second);
-                    Path.Add(tPath);
-
+                    tPath.Select(int.Parse).ToList();
+                    ResultInt += sortList(true, tPath, First, Second);
                 }
             }
             Console.WriteLine("Result: " + ResultInt);
