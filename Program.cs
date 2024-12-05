@@ -19,9 +19,16 @@ Day3.FirstStar();
 Console.WriteLine("Part2: ");
 Day3.SecondStar();*/
 
-Day4 Day4 = new Day4();
+/*Day4 Day4 = new Day4();
 
 Console.WriteLine("Part1: ");
 Day4.FirstStar();
 Console.WriteLine("Part2: ");
-Day4.SecondStar();
+Day4.SecondStar();*/
+
+Day5 Day5 = new Day5();
+
+Console.WriteLine("Part1: ");
+Day5.FirstStar();
+/*Console.WriteLine("Part2: ");
+Day5.SecondStar();*/
