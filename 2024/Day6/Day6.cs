@@ -20,23 +20,21 @@ namespace AdventOfCode._2024
             List<List<string>> Path = new List<List<string>>();
             int ResultInt = 0;
 
-            foreach (string d in Inputs)
+            for (int x = 0; x < Inputs.Count; x++)
             {
-                if(d.IndexOf("^") > 0)
-                    {
-                    Console.WriteLine(" ^ " + d.IndexOf("^"));
-                
-                    }
-                /*for (int i = 0; i < d.Length; i++)
+                for (int y = 0; y < Inputs[x].Length; y++) 
                 {
-                    if (d[i].ToString() == "^")
+                 if (Inputs[x][y].ToString() == "^")
                     {
-
-                        Console.WriteLine(" ^ " + d.IndexOf());
+                        FindStop(x, y, -1, 0);
                     }
-                }*/
+                }
             }
-            //Console.WriteLine("Result: " + ResultInt);
+        }
+
+        public void FindStop(int x, int y, int Xdirection, int YDirection)
+        {
+
         }
 
 
