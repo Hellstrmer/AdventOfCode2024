@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode._2024
 {
-    internal class Day7
+    internal class Day8
     {
         public List<string> ReadFile()
         {
@@ -14,46 +14,28 @@
         public void FirstStar()
         {
             List<string> Inputs = ReadFile();
-            ulong CheckNumb = 0;
-            ulong EndNumb = 0;
-            string AddUp = "";
+            List<int> First = new List<int>();
+            List<int> Second = new List<int>();
+            List<int> PathX = new List<int>();
+            List<int> PathY = new List<int>();
+            int ResultInt = 0;
+            bool ResultDone = false;
 
-            foreach (string Input in Inputs)
+            for (int x = 0; x < Inputs.Count; x++)
             {
-                CheckNumb =  ulong.Parse(Input.Substring(0, Input.IndexOf(":")));
-                AddUp = Input.Substring(Input.IndexOf(":") +1).Trim();
-                List<ulong> Path = FindNumbs(AddUp);
-                if (ControlNumbs(CheckNumb, Path, 0))
+                Console.WriteLine("Inputs!" + Inputs[x]);
+                for (int y = 0; y < Inputs[x].Length; y++)
                 {
-                    EndNumb += CheckNumb;
+                    //Console.WriteLine("Inputs!" + Inputs[x]);
+                    if (Inputs[x][y].ToString() == "^")
+                    {;
+                        
+                        return;
+                    }
                 }
             }
-            Console.WriteLine("Numbers: " + EndNumb);            
-        }
 
-        public List<ulong> FindNumbs(string AddUp)
-        {
-            string t = "";
-            List <string> Inputs = new List<string>();
-            List <ulong> num = new List<ulong>();
-            for(int i = 0; i < AddUp.Length; i++)
-            {
-                if (AddUp[i].ToString() != " " || i == AddUp.Length -1)
-                {
-                    t += AddUp[i].ToString();
-                } 
-                else
-                {
-                    num.Add(ulong.Parse(t));
-                    t = "";
-                } 
-                if (i == AddUp.Length - 1)
-                {
-                    num.Add(ulong.Parse(t));
-                    t = "";
-                }
-            }            
-            return num;
+            Console.WriteLine("Numbers: " + ResultInt);
         }
 
         public bool ControlNumbs(ulong CheckNumb, List<ulong> Path, int MathVersion)
