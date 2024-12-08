@@ -7,7 +7,7 @@ namespace AdventOfCode._2024
     {
         public List<string> ReadFile()
         {
-            bool example = true;
+            bool example = false;
             string input = File.ReadAllText(example
                 ? "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day6\\Example.txt".Trim()
                 : "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day6\\Input.txt").Trim();
@@ -17,9 +17,7 @@ namespace AdventOfCode._2024
         public void FirstStar()
         {
             List<string> Inputs = ReadFile();
-            List<int> First = new List<int>();
-            List<int> Second = new List<int>();
-            List<int> PathX = new List<int>();
+            List<string> PathX = new List<string>();
             List<int> PathY = new List<int>();
             int ResultInt = 0;
             bool ResultDone = false;
@@ -31,115 +29,184 @@ namespace AdventOfCode._2024
                  if (Inputs[x][y].ToString() == "^")
                     {
                         ResultInt++;
-                        Console.WriteLine("Before!");
                         if (!ResultDone)
                         {
                             ResultDone = FindStop(Inputs, PathX, PathY, x, y, 0, ResultInt, false);
                         }
-
-                        Console.WriteLine("Match!");
                         return;
                     }
                 }
             }
-
-            Console.WriteLine("Numbers: " + ResultInt);
         }
 
-        public bool FindStop(List<string> Inputs,List<int> PathX, List<int> PathY, int xO, int yO, int Direction, int Match, bool Done)
-        {
-            for (int x = 0; x < Inputs.Count; x++)
+        public bool FindStop(List<string> Inputs,List<string> Path, List<int> PathY, int xO, int yO, int Direction, int Match, bool Done)
+        {            
+            //Upp
+            if (Direction == 0)
             {
-                for (int y = 0; y < Inputs[x].Length; y++)
+                for (int x = xO; x >= 0; x--)
                 {
                     if (Done)
                     {
                         return Done;
                     }
-                    if (Direction == 0)
+                    string PathMatch = x.ToString() + " " + yO.ToString();
+                    for (int i = 0; i < Path.Count; i++)
                     {
-                        if (Inputs[x][yO].ToString() == "#")
+                        if (Path[i] == PathMatch)
                         {
-                            PathX.Add(x);
-                            PathY.Add(yO);
-                            Direction++;
-                            Console.WriteLine("Match Up! Index X " + x +"| Y " + yO + "Match: " + Match);
-                            Done = FindStop(Inputs, PathX, PathY, x +1, yO, Direction, Match, false);
+                            break;
                         }
-                        else if (x == Inputs.Count - 1)
+                        else if (i == Path.Count - 1 && x != xO)
                         {
-                            Done = true;
-                            return Done;
-
+                            Match++;
+                            break;
                         }
                     }
-                    else if (Direction == 1)
+                    Path.Add(PathMatch);
+                    if (x == Inputs.Count - 1)
                     {
-                        if (Inputs[xO][y].ToString() == "#")
-                        {
-                            Direction++;
-                            Console.WriteLine("Match Right!" + "Match: " + Match);
-                            Done = FindStop(Inputs, PathX, PathY, xO, y -1, Direction, Match, false);
-                        }
-                        else if (y == Inputs[xO].Length - 1)
-                        {
-                            Done = true;
-                            return Done;
-                        }
+                        Done = true;
+                        Console.WriteLine("Match! " + Match);
+                        return Done;
                     }
-                    else if (Direction == 2)
+                    else if (Inputs[x -1][yO].ToString() == "#")
                     {
-                        if (Inputs[x][yO].ToString() == "#" && (x > xO || x == 0))
-                        {
-                            Direction++;
-                            Console.WriteLine("Match Down!" + "Match: " + Match);
-                            Done = FindStop(Inputs, PathX, PathY, x -1, yO, Direction, Match, false);
-                        }
-                        else if (x == Inputs.Count - 1)
-                        {
-                            Done = true;
-                            return Done;
-                        }
-                    }
-                    else if (Direction == 3)
-                    {
-                        if (Inputs[xO][y].ToString() == "#")
-                        {
-                            Direction = 0;
-                            Console.WriteLine("Match Left!" + "Match: " + Match);
-                            Done = FindStop(Inputs, PathX, PathY, xO, y + 1, Direction, Match, false);
-                        } 
-                        else if (y == Inputs[xO].Length -1)
-                        {
-                            Done = true;
-                            return Done;
-                        }
-                    }
-                }
-                //Console.WriteLine("Numbers: " +  Match);
-            }
-            return Done;
-        }
-
-        public List<int> addPathX(List<int> PathX, int start, int goal)
-        {
-            List<int> Result = new List<int>();
-            if (start < goal)
-            {
-                for (int i = start; i > goal; i++)
-                {
-                    Result.Add(i);
+                        Direction++;
+                        Done = FindStop(Inputs, Path, PathY, x, yO, Direction, Match, false);
+                    }                    
                 }
             } 
-            else
+            //Höger
+            else if (Direction == 1)
             {
-                for (int i = goal; i > start; i--)
+                for (int y = yO; y < Inputs[xO].Length; y++)
                 {
-                    Result.Add(i);
+                    if (Done)
+                    {
+                        return Done;
+                    }
+                    string PathMatch = xO.ToString() + " " + y.ToString();
+                    for (int i = 0; i < Path.Count; i++)
+                    {
+                        if (Path[i] == PathMatch)
+                        {
+                            break;
+                        }
+                        else if (i == Path.Count - 1 && y != yO)
+                        {
+                            Match++;
+                            break;
+                        }
+                    }
+                    Path.Add(PathMatch);
+                    if (y == Inputs.Count - 1)
+                        {
+                            Done = true;
+                        Console.WriteLine("Match! " + Match);
+                        return Done;
+                        }
+                    else if (Inputs[xO][y +1].ToString() == "#")
+                    {
+                        Direction++;
+                        Done = FindStop(Inputs, Path, PathY, xO, y, Direction, Match, false);
+                    } 
                 }
             }
-            return Result;
+            //ner
+            else if (Direction == 2)
+            {
+                for (int x = xO; x < Inputs.Count; x++)
+                {
+                    if (Done)
+                    {
+                        return Done;
+                    }
+                    string PathMatch = x.ToString() + " " + yO.ToString();
+                    for (int i = 0; i < Path.Count; i++)
+                    {
+                        if (Path[i] == PathMatch)
+                        {
+                            break;
+                        }
+                        else if (i == Path.Count - 1 && x != xO)
+                        {
+                            Match++;
+                            break;
+                        }
+                    }
+                    Path.Add(PathMatch);
+                    if (x == Inputs.Count - 1)
+                    {
+                        Done = true;
+                        Console.WriteLine("Match! " + Match);
+                        return Done;
+                    }
+                    else if (Inputs[x + 1][yO].ToString() == "#")
+                    {
+                        Direction++;
+                        Done = FindStop(Inputs, Path, PathY, x, yO, Direction, Match, false);
+                    }
+                }
+            }
+            else if (Direction == 3)
+            {
+                for (int y = yO; y > 0; y--)
+                {
+                    if (Done)
+                    {
+                        return Done;
+                    }
+                    string PathMatch = xO.ToString() + " " + y.ToString();
+                    for (int i = 0; i < Path.Count; i++)
+                    {
+                        if (Path[i] == PathMatch)
+                        {
+                            break;
+                        } else if (i == Path.Count -1 && y != yO) 
+                        {
+                            Match++;
+                            break;
+                        }
+                    }
+                    Path.Add(PathMatch);
+                    if (y == Inputs.Count - 1)
+                    {
+                        Done = true;
+                        Console.WriteLine("Match! " + Match);
+                        return Done;
+                    }
+                    else if (Inputs[xO][y - 1].ToString() == "#")
+                    {
+                        Direction = 0;
+                        Done = FindStop(Inputs, Path, PathY, xO, y, Direction, Match, false);
+                    }                    
+                }
+            }
+            return Done;            
         }
+
+        public int PathCheck(List<string> Path, string PathMatch, int ActualX, int OldX, int Match)
+        {
+            for (int i = 0; i < Path.Count; i++)
+            {
+                if (Path[i] == PathMatch)
+                {
+                    break;
+                }
+                else if (i == Path.Count - 1 && ActualX != OldX)
+                {
+                    Match++;
+                    break;
+                }
+            }
+                Path.Add(PathMatch);
+
+            return Match;
+        }
+            
+
+
 
         public void SecondStar()
         {
