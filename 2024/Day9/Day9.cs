@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace AdventOfCode._2024
 {
@@ -14,6 +15,7 @@ namespace AdventOfCode._2024
         }
         public void FirstStar()
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             string Inputs = ReadFile();
             string ReturnString = "";
             List<int> ReturnInts = new List<int>();
@@ -42,6 +44,8 @@ namespace AdventOfCode._2024
                 }
             }
             BuildCorrectString(ReturnInts);
+            stopwatch.Stop();
+            Console.WriteLine($"Elapsed Time: {stopwatch.Elapsed.TotalSeconds}:F2");
         }
 
         public void BuildCorrectString(List<int> IntInput)
@@ -104,7 +108,7 @@ namespace AdventOfCode._2024
             {                
                 Result += Convert.ToUInt64(i) * Convert.ToUInt64(Inputs[i]);
             }
-            Console.WriteLine("Checksum: " + Result);            
+            Console.WriteLine("Checksum: " + Result);
         }
 
        

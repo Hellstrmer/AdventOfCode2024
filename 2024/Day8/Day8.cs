@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode._2024
+﻿using System.Diagnostics;
+
+namespace AdventOfCode._2024
 {
     internal class Day8
     {
@@ -13,6 +15,7 @@
         }
         public void FirstStar()
         {
+
             List<string> Inputs = ReadFile();
             List<int> First = new List<int>();
             List<int> Second = new List<int>();
