@@ -6,20 +6,17 @@ namespace AdventOfCode._2024
     {
         public string ReadFile()
         {
-            bool example = true;
+            bool example = false;
             string input = File.ReadAllText(example
-                ? "C:\\Users\\clj608\\Source\\Repos\\Hellstrmer\\AdventOfCode2025\\2024\\Day9\\Example.txt".Trim()
-                : "C:\\Users\\clj608\\Source\\Repos\\Hellstrmer\\AdventOfCode2025\\2024\\Day9\\Input.txt").Trim();
-            //List<string> Inputs = input.Split("\r\n").ToList();
+                ? "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day9\\Example.txt".Trim()
+                : "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day9\\Input.txt").Trim();
             return input;
         }
         public void FirstStar()
         {
-            //
-            // 90885620042 är för lågt
-            //
             string Inputs = ReadFile();
             string ReturnString = "";
+            List<int> ReturnInts = new List<int>();
             string ID = "";
             int Block = 0;
             int BlockPlace = 1;
@@ -29,12 +26,14 @@ namespace AdventOfCode._2024
                 BlockPlace++;
                 for (int j = 0; j < Int32.Parse(Inputs[i].ToString()); j++) 
                 {
-                    if (MOD == 0 && Inputs[i].ToString() != "0")
+                    if (MOD == 0)
                     {
                         ReturnString += Block.ToString();
+                        ReturnInts.Add(Block);
                     } else
                     {
                         ReturnString += ".";
+                        ReturnInts.Add(-1);
                     }
                 }
                 if (MOD == 1)
@@ -42,74 +41,70 @@ namespace AdventOfCode._2024
                     Block++;
                 }
             }
-
-            //Console.WriteLine("Numbers: " + ReturnString);
-            BuildCorrectString(ReturnString);
+            BuildCorrectString(ReturnInts);
         }
 
-        public void BuildCorrectString(string Input)
+        public void BuildCorrectString(List<int> IntInput)
         {
-            string Res = Input;
-            StringBuilder sbInput = new StringBuilder(Input);
             int Dot = 0;
-            string LastChar = "";
+            int LastChar = 0;
+            int Search = -1;
             int LastCharIndex = 0;
-            for (int i = 0; Input.Length > 0; i++)
+
+            for (int i = 0; IntInput.Count > 0; i++)
             {
-                if (i > Input.Length -1)
-                {                    
-                        Console.WriteLine("Sorted: " + sbInput);
-                        Checksum(sbInput);
-                        return;
-                    
+                if (i > IntInput.Count - 1)
+                {
+                    Checksum(IntInput);
+                    return;
+
                 }
-                if (Input[i] == '.')
+                if (IntInput[i] == Search)
                 {
                     Dot = i;
-                    LastChar = sbInput[sbInput.Length - 1].ToString();
-                    LastCharIndex = sbInput.Length - 1;
-                    if (LastChar == ".")
+                    LastChar = IntInput[IntInput.Count - 1];
+                    LastCharIndex = IntInput.Count - 1;
+                    
+                    if (LastChar != Search)
                     {
-                        for (int j = sbInput.Length - 1; j >= 0; j--)
-                        {
-                            if (sbInput[j] != '.')
-                            {
-                                LastChar = sbInput[j].ToString();
-                                LastCharIndex = j;
-                                break;
-                            }
-                        }
+                        Dot = i;
+                        LastChar = IntInput[IntInput.Count - 1];
+                        LastCharIndex = IntInput.Count - 1;
                     }
-                    if (LastChar != ".")
+
+                    if (LastChar == Search || Dot > LastCharIndex)
                     {
-                        for (int k = 0; k < sbInput.Length; k++)
+                        for (int j = IntInput.Count - 1; j >= 0; j--)
                         {
-                            if(sbInput[k].ToString() == ".")
+                            if (IntInput[j] != Search)
                             {
-                                sbInput[Dot] = Input[LastCharIndex];
-                                sbInput.Remove(LastCharIndex, sbInput.Length - LastCharIndex);
+                                LastChar = IntInput[j];
+                                LastCharIndex = j;
+                                if (Dot > LastCharIndex)
+                                {
+                                    LastCharIndex = j + Dot - LastCharIndex;
+                                }
                                 break;
-                            }
-                            else if (k == sbInput.Length - 1)
-                            {
-                                Console.WriteLine("Sorted:" + sbInput);
-                                Checksum(sbInput);
-                                return;
-                            }
-                        }                        
+                            }                            
+                        }
                     } 
+                    if (LastChar != Search)
+                    {
+                        IntInput[Dot] = IntInput[LastCharIndex];
+                        IntInput.RemoveRange(LastCharIndex, IntInput.Count - LastCharIndex);
+                    }                
                 }
             }
-        }
+        }            
 
-        public void Checksum(StringBuilder sbInput)
+        public void Checksum(List<int> Inputs)
         {
             ulong Result = 0;
-            for (int i = 0; i < sbInput.Length; i++)
-            {
-                Result += Convert.ToUInt64(i) * ulong.Parse(sbInput[i].ToString());
+            for (int i = 0; i < Inputs.Count; i++)
+            {                
+                Result += Convert.ToUInt64(i) * Convert.ToUInt64(Inputs[i]);
             }
-            Console.WriteLine("Checksum: " + Result);
+            Console.WriteLine("Checksum: " + Result);            
         }
 
        
