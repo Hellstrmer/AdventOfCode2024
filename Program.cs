@@ -48,5 +48,7 @@ Day7.FirstStar();
 Console.WriteLine("Part2: ");
 Day7.SecondStar();*/
 
-Console.WriteLine("Part1: ");
-Day9.FirstStar();
+//Console.WriteLine("Part1: ");
+//Day9.FirstStar();
+Console.WriteLine("Part2: ");
+Day9.SecondStar();
