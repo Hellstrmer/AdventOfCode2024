@@ -1,103 +1,175 @@
-﻿using System.Diagnostics;
+﻿using System.Drawing;
 
 namespace AdventOfCode._2024
 {
     internal class Day8
     {
-        public List<string> ReadFile()
+        private int _width;
+        private int _height;
+        private char[,] _grid;
+        public void ReadFile()
         {
+            //Reading out a grid
             bool example = true;
-            string input = File.ReadAllText(example
-                ? "C:\\Users\\jespe\\Source\\Repos\\Hellstrmer\\AdventOfCode2024\\2024\\Day8\\Example.txt".Trim()
-                : "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day7\\Input.txt").Trim();
-            List<string> Inputs = input.Split("\r\n").ToList();
-            return Inputs;
+            string[] input = File.ReadAllLines(example
+                ? "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day8\\Example.txt"
+                : "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day8\\Input.txt");
+
+            _width = input[0].Length;
+            _height = input.Length;
+            _grid = new char[_height, _width]; 
+            for (var y = 0; y < _height; y++) 
+            {
+                var line = input[y];
+                for (var x = 0; x < _width; x++)
+                {
+                    var character = line[x];
+                    _grid[y, x] = character;
+                }
+            }
         }
         public void FirstStar()
         {
-
-            List<string> Inputs = ReadFile();
-            List<int> First = new List<int>();
-            List<int> Second = new List<int>();
-            List<int> PathX = new List<int>();
-            List<int> PathY = new List<int>();
-            int ResultInt = 0;
-            bool ResultDone = false;
-
-            for (int x = 0; x < Inputs.Count; x++)
+            ReadFile();
+            Point FoundPoint;
+            char FoundChar;
+            int Antinode = 0;
+            HashSet<Point> markedPoints = new HashSet<Point>();
+            for (int y = 0; y < _height; y++)
             {
-                Console.WriteLine("Inputs!" + Inputs[x]);
-                for (int y = 0; y < Inputs[x].Length; y++)
+                for (int x = 0; x < _width; x++)
                 {
-                    //Console.WriteLine("Inputs!" + Inputs[x]);
-                    if (Inputs[x][y].ToString() == "^")
-                    {;
-                        
-                        return;
+                    if (_grid[x, y] != '.' && _grid[x, y] != '#')
+                    {
+                        FoundPoint = new Point(x, y);
+                        FoundChar = _grid[x, y];
+                        Antinode = FindNextPoint(FoundPoint, FoundChar, Antinode, markedPoints);
+                    }                    
+                }
+                if (y == _height - 1)
+                {
+                    for (int row = 0; row < _grid.GetLength(0); row++)
+                    {
+                        for (int col = 0; col < _grid.GetLength(1); col++)
+                        {
+                            Console.Write(_grid[row, col]);
+                        }
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine("Antinode: " + Antinode);
+                }
+            }
+        }
+
+        private int FindNextPoint(Point Latest, char LatestChar, int Antinode, HashSet<Point> markedPoints)
+        {
+            for (int y = 0; y < _height; y++)
+            {
+                for (int x = 0; x < _width; x++)
+                {
+                    Point Current = new Point(x, y);
+                    if (_grid[x, y] == LatestChar && !Current.Equals(Latest))
+                    {
+                        List<Point> Points = new List<Point>();
+                        Points.Add(new Point(Latest.X - (x - Latest.X), Latest.Y - (y - Latest.Y)));
+                        Points.Add(new Point(x + (x - Latest.X), y + (y - Latest.Y)));
+                        foreach(Point p in Points)
+                        {
+                            if (!OutOfBound(p) && _grid[p.X, p.Y] != '#' && !markedPoints.Contains(p))
+                            {
+                                if (_grid[p.X, p.Y] == '.')
+                                {
+                                    _grid[p.X, p.Y] = '#';
+                                }
+                                markedPoints.Add(p);
+                                Antinode++;
+                            }
+                        }
                     }
                 }
             }
-
-            Console.WriteLine("Numbers: " + ResultInt);
+            return Antinode;
         }
-
-        public bool ControlNumbs(ulong CheckNumb, List<ulong> Path, int MathVersion)
+        public void SecondStar()
         {
-            var comb = Combinations(Path);
-            foreach(var ops in comb)
+            ReadFile();
+            Point FoundPoint;
+            char FoundChar;
+            int Antinode = 0;
+            HashSet<Point> markedPoints = new HashSet<Point>();
+            for (int y = 0; y < _height; y++)
             {
-                    ulong test = Evaluate(ops, Path, CheckNumb);
-                    if (Evaluate(ops, Path, CheckNumb) == CheckNumb)
-                    {
-                        return true;
-                    }          
-            }
-            return false;
-        }
-
-        private ulong Evaluate(List<MathMethod> ops, List<ulong> Path, ulong CheckNumb)
-        {
-            var result = Path[0];
-            for (int i = 0; i < ops.Count; i++) 
-            {
-                result = ops[i] switch
+                for (int x = 0; x < _width; x++)
                 {
-                    MathMethod.Add => result + Path[i + 1],
-                    MathMethod.Multiply => result * Path[i + 1]
-                };
-            }
-            return result;
-        }
-        private IEnumerable <List<MathMethod>> Combinations(List<ulong> Path)
-        {
-            var OPCount = Path.Count - 1;
-            var States = 2;
-            var CombinationCount = (int)Math.Pow(States, OPCount);
-
-            for (int i = 0; i < CombinationCount; i++)
-            {
-                var combination = new List<MathMethod>();
-                var Value = i;
-
-                for (int pos = 0; pos < OPCount; pos++)
-                {
-                    var op = (Value % States) switch
+                    if (_grid[x, y] != '.' && _grid[x, y] != '#')
                     {
-                        0 => MathMethod.Add,
-                        1 => MathMethod.Multiply
-                    };
-                    combination.Add(op);
-                    Value /= States;
+                        FoundPoint = new Point(x, y);
+                        FoundChar = _grid[x, y];
+                        Antinode = FindNextPoints(FoundPoint, FoundChar, Antinode, markedPoints);
+                    }
                 }
-                yield return combination;
+                if (y == _height - 1)
+                {
+                    for (int row = 0; row < _grid.GetLength(0); row++)
+                    {
+                        for (int col = 0; col < _grid.GetLength(1); col++)
+                        {
+                            Console.Write(_grid[row, col]);
+                        }
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine("Antinode: " + Antinode);                    
+                }
             }
         }
-
-        private enum MathMethod
+        private int FindNextPoints(Point Latest, char LatestChar, int Antinode, HashSet<Point> markedPoints)
         {
-            Add,
-            Multiply
+            for (int y = 0; y < _height; y++)
+            {
+                for (int x = 0; x < _width; x++)
+                {
+                    Point Current = new Point(x, y);
+                    if (_grid[x, y] == LatestChar && !Current.Equals(Latest))
+                    {
+                        List<Point> Points = new List<Point>();
+
+                        Point DistanceBetween = new Point(x - Latest.X, y - Latest.Y);
+
+                        List<Point> NewPoints = FindAllPoints(Latest, DistanceBetween);
+                        foreach (Point p in NewPoints)
+                        {
+                            if (!OutOfBound(p) && _grid[p.X, p.Y] != '#' && !markedPoints.Contains(p))
+                            {
+                                if (_grid[p.X, p.Y] == '.')
+                                {
+                                    _grid[p.X, p.Y] = '#';
+                                }                                 
+                                markedPoints.Add(p);
+                                Antinode++;                                
+                            }
+                        }
+                    }
+                }
+            }
+            return Antinode;
+        }
+        private List<Point> FindAllPoints(Point Latest, Point DistanceBetween)
+        {
+            List<Point> Points = new List<Point>();
+            Point current = Latest;
+
+            while (!OutOfBound(current))
+            {
+                Points.Add(current);
+                current = new Point(current.X + DistanceBetween.X, current.Y + DistanceBetween.Y);
+            }
+            return Points;
         }        
+
+        private bool OutOfBound(Point ControlPoint)
+        {
+            return ControlPoint.X > _width - 1 || ControlPoint.X < 0 || ControlPoint.Y > _height - 1 || ControlPoint.Y < 0; 
+        }
     }
 }
 

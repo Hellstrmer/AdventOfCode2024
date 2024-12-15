@@ -1,10 +1,12 @@
 ﻿
+using System.Drawing;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode._2024
 {
     internal class Day6
     {
+        private Point _startpos;
         public List<string> ReadFile()
         {
             bool example = false;
@@ -24,14 +26,15 @@ namespace AdventOfCode._2024
 
             for (int x = 0; x < Inputs.Count; x++)
             {
-                for (int y = 0; y < Inputs[x].Length; y++) 
+                for (int y = 0; y < Inputs[x].Length; y++)
                 {
-                 if (Inputs[x][y].ToString() == "^")
+                    if (Inputs[x][y].ToString() == "^")
                     {
                         ResultInt++;
                         if (!ResultDone)
                         {
-                            ResultDone = FindStop(Inputs, PathX, PathY, x, y, 0, ResultInt, false);
+                            _startpos = new Point(x, y);
+                            ResultDone = FindStop(Inputs, PathX, PathY, _startpos, 0, ResultInt, false);
                         }
                         return;
                     }
@@ -39,25 +42,25 @@ namespace AdventOfCode._2024
             }
         }
 
-        public bool FindStop(List<string> Inputs,List<string> Path, List<int> PathY, int xO, int yO, int Direction, int Match, bool Done)
-        {            
+        public bool FindStop(List<string> Inputs, List<string> Path, List<int> PathY, Point Position, int Direction, int Match, bool Done)
+        {
             //Upp
             if (Direction == 0)
-            {
-                for (int x = xO; x >= 0; x--)
+            {                
+                for (int x = Position.X; x >= 0; x--)
                 {
                     if (Done)
                     {
                         return Done;
                     }
-                    string PathMatch = x.ToString() + " " + yO.ToString();
+                    string PathMatch = x.ToString() + " " + Position.Y.ToString();
                     for (int i = 0; i < Path.Count; i++)
                     {
                         if (Path[i] == PathMatch)
                         {
                             break;
                         }
-                        else if (i == Path.Count - 1 && x != xO)
+                        else if (i == Path.Count - 1 )
                         {
                             Match++;
                             break;
@@ -70,30 +73,31 @@ namespace AdventOfCode._2024
                         Console.WriteLine("Match! " + Match);
                         return Done;
                     }
-                    else if (Inputs[x -1][yO].ToString() == "#")
+                    else if (Inputs[x - 1][Position.Y].ToString() == "#")
                     {
+                        Position.X = x;
                         Direction++;
-                        Done = FindStop(Inputs, Path, PathY, x, yO, Direction, Match, false);
-                    }                    
+                        Done = FindStop(Inputs, Path, PathY, Position, Direction, Match, false);
+                    }
                 }
-            } 
+            }
             //Höger
             else if (Direction == 1)
             {
-                for (int y = yO; y < Inputs[xO].Length; y++)
+                for (int y = Position.Y; y < Inputs[Position.X].Length; y++)
                 {
                     if (Done)
                     {
                         return Done;
                     }
-                    string PathMatch = xO.ToString() + " " + y.ToString();
+                    string PathMatch = Position.X.ToString() + " " + y.ToString();
                     for (int i = 0; i < Path.Count; i++)
                     {
                         if (Path[i] == PathMatch)
                         {
                             break;
                         }
-                        else if (i == Path.Count - 1 && y != yO)
+                        else if (i == Path.Count - 1)
                         {
                             Match++;
                             break;
@@ -101,35 +105,36 @@ namespace AdventOfCode._2024
                     }
                     Path.Add(PathMatch);
                     if (y == Inputs.Count - 1)
-                        {
-                            Done = true;
+                    {
+                        Done = true;
                         Console.WriteLine("Match! " + Match);
                         return Done;
-                        }
-                    else if (Inputs[xO][y +1].ToString() == "#")
+                    }
+                    else if (Inputs[Position.X][y + 1].ToString() == "#")
                     {
+                        Position.Y = y;
                         Direction++;
-                        Done = FindStop(Inputs, Path, PathY, xO, y, Direction, Match, false);
-                    } 
+                        Done = FindStop(Inputs, Path, PathY, Position, Direction, Match, false);
+                    }
                 }
             }
             //ner
             else if (Direction == 2)
             {
-                for (int x = xO; x < Inputs.Count; x++)
+                for (int x = Position.X; x < Inputs.Count; x++)
                 {
                     if (Done)
                     {
                         return Done;
                     }
-                    string PathMatch = x.ToString() + " " + yO.ToString();
+                    string PathMatch = x.ToString() + " " + Position.Y.ToString();
                     for (int i = 0; i < Path.Count; i++)
                     {
                         if (Path[i] == PathMatch)
                         {
                             break;
                         }
-                        else if (i == Path.Count - 1 && x != xO)
+                        else if (i == Path.Count - 1)
                         {
                             Match++;
                             break;
@@ -142,28 +147,30 @@ namespace AdventOfCode._2024
                         Console.WriteLine("Match! " + Match);
                         return Done;
                     }
-                    else if (Inputs[x + 1][yO].ToString() == "#")
+                    else if (Inputs[x + 1][Position.Y].ToString() == "#")
                     {
+                        Position.X = x;
                         Direction++;
-                        Done = FindStop(Inputs, Path, PathY, x, yO, Direction, Match, false);
+                        Done = FindStop(Inputs, Path, PathY, Position, Direction, Match, false);
                     }
                 }
             }
             else if (Direction == 3)
             {
-                for (int y = yO; y > 0; y--)
+                for (int y = Position.Y; y > 0; y--)
                 {
                     if (Done)
                     {
                         return Done;
                     }
-                    string PathMatch = xO.ToString() + " " + y.ToString();
+                    string PathMatch = Position.X.ToString() + " " + y.ToString();
                     for (int i = 0; i < Path.Count; i++)
                     {
                         if (Path[i] == PathMatch)
                         {
                             break;
-                        } else if (i == Path.Count -1 && y != yO) 
+                        }
+                        else if (i == Path.Count - 1)
                         {
                             Match++;
                             break;
@@ -176,14 +183,15 @@ namespace AdventOfCode._2024
                         Console.WriteLine("Match! " + Match);
                         return Done;
                     }
-                    else if (Inputs[xO][y - 1].ToString() == "#")
+                    else if (Inputs[Position.X][y - 1].ToString() == "#")
                     {
+                        Position.Y = y;
                         Direction = 0;
-                        Done = FindStop(Inputs, Path, PathY, xO, y, Direction, Match, false);
-                    }                    
+                        Done = FindStop(Inputs, Path, PathY, Position, Direction, Match, false);
+                    }
                 }
             }
-            return Done;            
+            return Done;
         }
 
         public int PathCheck(List<string> Path, string PathMatch, int ActualX, int OldX, int Match)
@@ -200,12 +208,15 @@ namespace AdventOfCode._2024
                     break;
                 }
             }
-                Path.Add(PathMatch);
+            Path.Add(PathMatch);
 
             return Match;
         }
-            
 
+        private bool isOutOfBounds(int x, int y)
+        {
+            return false;
+        }
 
 
         public void SecondStar()
@@ -219,14 +230,14 @@ namespace AdventOfCode._2024
 
             foreach (string d in Inputs)
             {
-                if (d.IndexOf('|') != -1)
+                if (d.IndePosition.Xf('|') != -1)
                 {
-                    string f = d.Substring(0, d.IndexOf('|')).Trim();
-                    string l = d.Substring(d.IndexOf('|') + 1).Trim();
+                    string f = d.Substring(0, d.IndePosition.Xf('|')).Trim();
+                    string l = d.Substring(d.IndePosition.Xf('|') + 1).Trim();
                     First.Add(Int32.Parse(f));
                     Second.Add(Int32.Parse(l));
                 }
-                else if (d.IndexOf(",") != -1)
+                else if (d.IndePosition.Xf(",") != -1)
                 {
                     List<string> tPath = d.Split(',').ToList();
                     tPath.Select(int.Parse).ToList();
@@ -238,4 +249,3 @@ namespace AdventOfCode._2024
         }
     }
 }
-
