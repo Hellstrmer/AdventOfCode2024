@@ -4,7 +4,7 @@ namespace AdventOfCode._2024
 {
     internal class Day11
     {
-        int Multiply = 2024;
+        
 
         public List<string> ReadFile()
         {
@@ -17,27 +17,21 @@ namespace AdventOfCode._2024
         }
         public void FirstStar()
         {
-            //string message = ReadFile();
             List<string> list = ReadFile();
-            int NumberOfBlinks = 25;
+            int NumberOfBlinks = 75;
             List<string> ReturnList = new List<string>();
-            //ReturnList = Blink(list);
             for (int i = 0; i < NumberOfBlinks; i++)
             {
                 ReturnList = Blink(list);
             }
-
             Console.WriteLine("Stones: " + ReturnList.Count);
 
-            /*foreach (string input in ReturnList)
-            {
-                Console.WriteLine("Input: " + input);
-            }*/
 
         }
 
         private List<string> Blink(List<string> list)
         {
+            ulong Multiply = 2024;
             for (int i = 0; i < list.Count; i++)
             {
                 int MOD = list[i].Length % 2;
@@ -59,7 +53,7 @@ namespace AdventOfCode._2024
                 }
                 else
                 {
-                    ulong t = ulong.Parse(list[i]) * 2024;
+                    ulong t = ulong.Parse(list[i]) * Multiply;
                     list[i] = t.ToString();
                 }
             }
