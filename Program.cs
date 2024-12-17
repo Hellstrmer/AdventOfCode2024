@@ -10,6 +10,7 @@ Day7 Day7 = new Day7();
 Day8 Day8 = new Day8();
 Day9 Day9 = new Day9();
 Day10 Day10 = new Day10();
+Day11 Day11 = new Day11();
 
 
 /*Console.WriteLine("Part1: ");
@@ -51,8 +52,8 @@ Day7.SecondStar();*/
 
 /*Console.WriteLine("Part1: ");
 Day8.FirstStar();*/
-Console.WriteLine("Part2: ");
-Day8.SecondStar();
+/*Console.WriteLine("Part2: ");
+Day8.SecondStar();*/
 
 //Console.WriteLine("Part1: ");
 //Day9.FirstStar();
@@ -62,3 +63,6 @@ Day9.SecondStar();*/
 /*
 Console.WriteLine("Part1: ");
 Day10.FirstStar();*/
+
+Console.WriteLine("Part1: ");
+Day11.FirstStar();
