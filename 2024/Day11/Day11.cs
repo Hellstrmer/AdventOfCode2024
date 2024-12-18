@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 namespace AdventOfCode._2024
 {
@@ -11,12 +12,13 @@ namespace AdventOfCode._2024
             bool example = false;
             string input = File.ReadAllText(example
                 ? "C:\\Users\\clj608\\Source\\Repos\\Hellstrmer\\AdventOfCode2025\\2024\\Day11\\Example.txt".Trim()
-                : "C:\\Users\\clj608\\Source\\Repos\\Hellstrmer\\AdventOfCode2025\\2024\\Day11\\Input.txt").Trim();
+                : "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day11\\Input.txt").Trim();
             List<string> Inputs = input.Split(" ").ToList();
             return Inputs;
         }
         public void FirstStar()
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             List<string> list = ReadFile();
             int NumberOfBlinks = 75;
             List<string> ReturnList = new List<string>();
@@ -25,6 +27,8 @@ namespace AdventOfCode._2024
                 ReturnList = Blink(list);
             }
             Console.WriteLine("Stones: " + ReturnList.Count);
+            stopwatch.Stop();
+            Console.WriteLine($"Elapsed Time: {stopwatch.Elapsed.TotalSeconds}:F2");
 
 
         }
