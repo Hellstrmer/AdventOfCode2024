@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
@@ -6,112 +7,166 @@ namespace AdventOfCode._2024
 {
     internal class Day10
     {
-        private List<int> Matches = new List<int>();
-        public List<string> ReadFile()
+        private int _width;
+        private int _height;
+        private char[,] _grid;
+        private int ResultInt;
+        private int matches;
+        public void ReadFile()
         {
-            bool example = true;
-            string input = File.ReadAllText(example
-                ? "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day10\\Example.txt".Trim()
-                : "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day7\\Input.txt").Trim();
-            List<string> Inputs = input.Split("\r\n").ToList();
-            return Inputs;
+            // 308915776 To high
+            //Reading out a grid
+            bool example = false;
+            string[] input = File.ReadAllLines(example
+                ? "C:\\Users\\clj608\\Source\\Repos\\Hellstrmer\\AdventOfCode2025\\2024\\Day10\\Example.txt"
+                : "C:\\Users\\clj608\\Source\\Repos\\Hellstrmer\\AdventOfCode2025\\2024\\Day10\\Input.txt");
+
+            _width = input[0].Length;
+            _height = input.Length;
+            _grid = new char[_height, _width];
+            for (var y = 0; y < _height; y++)
+            {
+                var line = input[y];
+                for (var x = 0; x < _width; x++)
+                {
+                    var character = line[x];
+                    _grid[y, x] = character;
+                }
+            }
         }
-        public void FirstStar()
+            public void FirstStar()
         {
 
-            List<string> Inputs = ReadFile();
+            ReadFile();
             List<int> Matches = new List<int>();
+            HashSet<Point> FoundPoints = new HashSet<Point>();
+            HashSet<Point> FoundPointsZero = new HashSet<Point>();
+            Point Zero = new Point();
             int SlopeCounter = 0;
-            int ResultInt = 0;
+            matches = 1;
             int res = 0;
             bool ResultDone = false;
             int Dir = 0;
 
-            for (int x = 0; x < Inputs.Count; x++)
+            for (int x = 0; x < _width; x++)
             {
                 //Console.WriteLine("Inputs! " + Inputs[x]);
-                for (int y = 0; y < Inputs[x].Length; y++)
+                for (int y = 0; y < _height; y++)
                 {
-                    int InputPos = Int32.Parse(Inputs[x][y].ToString());
-                    //Console.WriteLine("Inputs!" + Inputs[x]);
-                    
-                    if (InputPos == 0)
+                    bool TP = Int32.TryParse(_grid[x, y].ToString(), out int t);
+                    //if (Int32.Parse(_grid[x, y].ToString()) == Dir)
+                    if (TP && t == Dir)
                     {
-                        CheckPath(Inputs, x, y, 1);                        
+                        if (TP && t == 0)
+                        {
+                            FoundPointsZero.Add(new Point(x, y));
+                        }
+                        Dir++;
+                        Zero = new Point(x, y);
+                        //Console.WriteLine(_grid[x, y]);
+                        for (int i = 0; i < matches; i++)
+                        {
+                            ResultDone = CheckPath(Zero, Dir, FoundPoints);
+                            if (ResultDone)
+                            {
+                                Dir = 0;
+                                
+                                break;
+                            }
+                        }   
                     }
                 }
-            }
-
-            Console.WriteLine("Numbers: " + ResultInt);
+                    /*if (x == _width - 1)
+                    {
+                        for (int row = 0; row < _grid.GetLength(0); row++)
+                        {
+                            for (int col = 0; col < _grid.GetLength(1); col++)
+                            {
+                                Console.Write(_grid[row, col]);
+                            }
+                            Console.WriteLine();
+                        }
+                        //Console.WriteLine("Antinode: " + Antinode);
+                    }*/
+                }
+            int tes = (int)Math.Pow(FoundPoints.Count, FoundPointsZero.Count);
+            Console.WriteLine("Numbers: " + ResultInt+ "Found: " + tes);
         }
-        private void CheckPath(List<string> Inputs, int XFind, int YFind, int Direction)
+        private bool CheckPath(Point point, int FindNumbers, HashSet<Point> FoundPoints)
         {
-            bool ResultDone = false;
-            int ResultInt = 0;
-            int result = 0;
             int res = 0;
-
-            List <int> Match = new List<int>();
-            List<int> MatchX = new List<int>();
-            List<int> MatchY = new List<int>();
-            if (YFind < Inputs[XFind].Count() - 1)
-            {
-                if(Int32.Parse(Inputs[XFind][YFind + 1].ToString()) == Direction)
+            //HashSet<Point> FoundPoints = new HashSet<Point>();
+            List<Point> Points = new List<Point>();
+            Point pX1 = new Point(point.X +1, point.Y);
+            Point pX2 = new Point(point.X -1, point.Y);
+            Point pY1 = new Point(point.X, point.Y + 1);
+            Point pY2 = new Point(point.X, point.Y - 1);
+            bool bPx1 = false;
+            bool bPx2 = false;
+            bool bPy1 = false;
+            bool bPy2 = false;
+            int IPx1 = 0;
+            int IPx2 = 0;
+            int IPy1 = 0;
+            int IPy2 = 0;
+            if (!OutOfBound(pX1))
                 {
-                    Match.Add(Int32.Parse(Inputs[XFind][YFind + 1].ToString()));
-                    MatchX.Add(XFind);
-                    MatchY.Add(YFind + 1);
-                }
+                bPx1 = Int32.TryParse(_grid[pX1.X, pX1.Y].ToString(), out IPx1);
             }
-            if (YFind > 0)
+            if (!OutOfBound(pX2))
             {
-                if (Int32.Parse(Inputs[XFind][YFind - 1].ToString()) == Direction)
-                {
-                    Match.Add(Int32.Parse(Inputs[XFind][YFind - 1].ToString()));
-                    MatchX.Add(XFind);
-                    MatchY.Add(YFind - 1);
-                }
+                bPx2 = Int32.TryParse(_grid[pX2.X, pX2.Y].ToString(), out IPx2);
             }
-            if (XFind < Inputs.Count() - 1)
+            if (!OutOfBound(pY1))
             {
-                if (Int32.Parse(Inputs[XFind + 1][YFind].ToString()) == Direction)
-                {
-                    Match.Add(Int32.Parse(Inputs[XFind + 1][YFind].ToString()));
-                    MatchX.Add(XFind + 1);
-                    MatchY.Add(YFind);
-                }
+                bPy1 = Int32.TryParse(_grid[pY1.X, pY1.Y].ToString(), out IPy1);
             }
-            if (XFind > 0)
+            if (!OutOfBound(pY2))
             {
-                if (Int32.Parse(Inputs[XFind - 1][YFind].ToString()) == Direction)
-                {
-                    Match.Add(Int32.Parse(Inputs[XFind - 1][YFind].ToString()));
-                    MatchX.Add(XFind - 1);
-                    MatchY.Add(YFind);
-                }
+                bPy2 = Int32.TryParse(_grid[pY2.X, pY2.Y].ToString(), out IPy2);
+            }                    
+                        
+            if (!OutOfBound(pX1) && bPx1 && IPx1 == FindNumbers)//Int32.Parse(_grid[pX1.X, pX1.Y].ToString()) == FindNumbers && Int32.Parse(_grid[pX1.X, pX1.Y].ToString()) != 9)
+            {
+                res++;
+                Points.Add(pX1);
             }
-            Direction++;
-            if (Direction == 9)
+            if (!OutOfBound(pX2) && bPx2 && IPx2 == FindNumbers)//Int32.Parse(_grid[pX2.X, pX2.Y].ToString()) == FindNumbers)
             {
-                foreach (int m in Match)
-                {
-                    res ++;
-                    Console.WriteLine("Results:" + res);
-                    return;
-                }
+                res++;
+                Points.Add(pX2);
             }
-            if (Match.Count > 0)
+            if (!OutOfBound(pY1) && bPy1 && IPy1 == FindNumbers)//Int32.Parse(_grid[pY1.X, pY1.Y].ToString()) == FindNumbers)
             {
-                for (int i = 0; i < Match.Count; i++)
-                {
-                    Console.WriteLine("Matches:" + Match.Count);
-                    CheckPath(Inputs, MatchX[i], MatchY[i], Direction);
-
-                    //ResultDone = CheckPos(Inputs, Match[i], MatchX[i], MatchY[i], Direction);
-                }
+                res++;
+                Points.Add(pY1);
+            }
+            if (!OutOfBound(pY2) && bPy2 && IPy2 == FindNumbers)//Int32.Parse(_grid[pY2.X, pY2.Y].ToString()) == FindNumbers)
+            {
+                res++;
+                Points.Add(pY2);                
             }
 
-                
+            if (FindNumbers == 9)
+            /* && (!OutOfBound(pX1) && Int32.Parse(_grid[pX1.X, pX1.Y].ToString()) == 9
+             || !OutOfBound(pX2) && Int32.Parse(_grid[pX2.X, pX2.Y].ToString()) == 9
+             || !OutOfBound(pY1) && Int32.Parse(_grid[pY1.X, pY1.Y].ToString()) == 9
+             || !OutOfBound(pY2) && Int32.Parse(_grid[pY2.X, pY2.Y].ToString()) == 9))*/
+            {
+                FoundPoints.Add(pX1);
+                ResultInt += res;
+                return true;
+            }
+            FindNumbers++; 
+            
+            foreach (var p in Points)
+            {
+                //Console.WriteLine("Points: " + res + " " +FindNumbers);
+                CheckPath(p, FindNumbers, FoundPoints);
+            }
+            
+            matches = res;
+            return false;                
         }
         
 
@@ -219,6 +274,11 @@ namespace AdventOfCode._2024
             X2,
             Y1,
             Y2
+        }
+
+        private bool OutOfBound(Point ControlPoint)
+        {
+            return ControlPoint.X > _width - 1 || ControlPoint.X < 0 || ControlPoint.Y > _height - 1 || ControlPoint.Y < 0;
         }
     }
 }

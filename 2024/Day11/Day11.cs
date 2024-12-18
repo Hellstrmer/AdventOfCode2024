@@ -3,9 +3,7 @@ using System.Text.RegularExpressions;
 namespace AdventOfCode._2024
 {
     internal class Day11
-    {
-        
-
+    {      
         public List<string> ReadFile()
         {
             bool example = false;
@@ -25,8 +23,6 @@ namespace AdventOfCode._2024
                 ReturnList = Blink(list);
             }
             Console.WriteLine("Stones: " + ReturnList.Count);
-
-
         }
 
         private List<string> Blink(List<string> list)
@@ -58,10 +54,6 @@ namespace AdventOfCode._2024
                 }
             }
             return list;
-        }
-        public void SecondStar()
-        {
-            
         }
        
     }
