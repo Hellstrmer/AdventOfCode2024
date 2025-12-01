@@ -4,8 +4,8 @@ namespace AdventOfCode._2025
 {
     internal class Day1(HelperClass helper)
     {
-        string Example = "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2025\\Day1\\Example.txt";
-        string Input = "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2025\\Day1\\Input.txt";
+        string Example = "Example.txt";
+        string Input = "Input.txt";
         bool example = false;
 
         public void FirstStar()
