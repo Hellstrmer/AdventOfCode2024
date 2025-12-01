@@ -10,16 +10,14 @@ namespace AdventOfCode._2025
 
         public void FirstStar()
         {
-            List<string> Inputs = example ? helper.ReadFileList(Example) : helper.ReadFileList(Input);
-            string dir = "";
-            int distance = 0;
+            List<string> Inputs = example ? helper.ReadFileList(Example) : helper.ReadFileList(Input);            
+            
             int res = 50;
             int timesZero = 0;
             foreach (string Input in Inputs)
             {
-                dir = Input.Substring(0, 1);
-                distance = Int32.Parse(Input.Substring(1));
-
+                string dir = Input.Substring(0, 1);
+                int distance = Int32.Parse(Input.Substring(1));
                 if (dir == "L")                
                     res = (res - distance % 100 + 100) % 100;
                 
@@ -34,14 +32,12 @@ namespace AdventOfCode._2025
         public void SecondStar()
         {
             List<string> Inputs = example ? helper.ReadFileList(Example) : helper.ReadFileList(Input);
-            string dir = "";
-            int distance = 0;
             int res = 50;
             int timesZero = 0;
             foreach (string Input in Inputs)
             {
-                dir = Input.Substring(0, 1);
-                distance = Int32.Parse(Input.Substring(1));                
+                string dir = Input.Substring(0, 1);
+                int distance = Int32.Parse(Input.Substring(1));                
                 if (dir == "L")
                 {
                     int t = ((res - distance));
@@ -49,8 +45,7 @@ namespace AdventOfCode._2025
                     for (int i = res; i >= t; i--)
                     {
                         if (i % 100 == 0 && count != 0)                         
-                            timesZero += 1;
-                        
+                            timesZero += 1;                        
                         count++;
                     }
                     res = (res - distance % 100 + 100) % 100;
@@ -62,8 +57,7 @@ namespace AdventOfCode._2025
                     for (int i = res; i <= t;i++)
                     {    
                         if (i % 100 == 0 && count != 0)                        
-                            timesZero += 1;
-                        
+                            timesZero += 1;                        
                         count++;
                     }
                     res = (res + distance % 100 + 100) % 100;
