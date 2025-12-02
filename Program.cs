@@ -22,7 +22,11 @@ Day2 Day2 = new Day2(helper);
 
 Console.WriteLine("Part1: ");
 Day2.FirstStar();
-//Console.WriteLine("Part2: ");
-//Day2.SecondStar();
+Console.WriteLine("Part2: ");
+Day2.SecondStar();
 
 
+// 1188511885
+// 824824821-824824827
+// 824824824
+// 824824825
