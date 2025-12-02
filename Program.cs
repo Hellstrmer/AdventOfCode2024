@@ -1,5 +1,4 @@
 ﻿using AdventOfCode._2024;
-using AdventOfCode._2025;
 
 Day1 Day1 = new Day1();
 Day2 Day2 = new Day2();
@@ -11,8 +10,6 @@ Day7 Day7 = new Day7();
 Day8 Day8 = new Day8();
 Day9 Day9 = new Day9();
 Day10 Day10 = new Day10();
-D2015Day5 day52 = new D2015Day5();
-_2025Day1 _2025D1 = new _2025Day1();
 
 
 /*Console.WriteLine("Part1: ");
@@ -20,14 +17,9 @@ Day1.FirstStar();
 Console.WriteLine("Part2: ");
 Day1.SecondStar();*/
 
-/*Console.WriteLine("Part1: ");
-Day2.FirstStar();
-Console.WriteLine("Part2: ");
-Day2.SecondStar();*/
 
-/*
 Console.WriteLine("Part1: ");
-Day3.FirstStar();
+Day1.FirstStar();
 Console.WriteLine("Part2: ");
 Day3.SecondStar();*/
 
@@ -54,19 +46,14 @@ Day7.SecondStar();*/
 
 /*Console.WriteLine("Part1: ");
 Day8.FirstStar();*/
-/*Console.WriteLine("Part2: ");
-Day8.SecondStar();*/
+Console.WriteLine("Part2: ");
+Day8.SecondStar();
 
 //Console.WriteLine("Part1: ");
 //Day9.FirstStar();
 /*Console.WriteLine("Part2: ");
 Day9.SecondStar();*/
 
-
+/*
 Console.WriteLine("Part1: ");
-_2025D1.FirstStar();
-Console.WriteLine("Part2: ");
-_2025D1.SecondStar();
-
-//Console.WriteLine((95+10 % 100 + 100) % 100 );
-// Safety01AFRY
+Day10.FirstStar();*/
