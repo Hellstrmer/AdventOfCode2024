@@ -1,14 +1,14 @@
 ﻿using AdventOfCode.Helpers;
 namespace AdventOfCode._2025
 {
-    internal class Day2(HelperClass helper)
+    internal class Day2 : HelperClass
     {
         string Example = "Example.txt";
         string Input = "Input.txt";
         bool example = true;
         public void FirstStar()
         {
-            string Inputs = example ? helper.ReadFileString(Example) : helper.ReadFileString(Input);
+            string Inputs = example ? ReadFileString(Example) : ReadFileString(Input);
             List<String> Inp = Inputs.Split(',').ToList();
             ulong res = 0;
             foreach(var s in Inp)
