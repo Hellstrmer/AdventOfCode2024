@@ -33,7 +33,7 @@ namespace AdventOfCode._2025
             int adjacent = 0;
             int res = 0;
             int lastState = 99;
-            while (true)
+            while (lastState != res)
             {
                 changePoints.Clear();
                 lastState = res;
@@ -54,7 +54,7 @@ namespace AdventOfCode._2025
                     }
                 }
                 updateInterface(changePoints);
-                if (lastState == res || !searchAll) { break; }
+                if ( !searchAll) { break; }
             }
             Console.WriteLine(res);
         }
