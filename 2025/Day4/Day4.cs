@@ -54,7 +54,7 @@ namespace AdventOfCode._2025
                     }
                 }
                 updateInterface(changePoints);
-                if ( !searchAll) { break; }
+                if (!searchAll) { break; }
             }
             Console.WriteLine(res);
         }
