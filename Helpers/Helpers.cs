@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
-namespace AdventOfCode.Helpers
+﻿namespace AdventOfCode.Helpers
 {
     public class HelperClass
     {
@@ -49,6 +42,18 @@ namespace AdventOfCode.Helpers
                 }
             }
             return (grid, width, height);
+        }
+
+        public void ShowGrid(char[,] grid)
+        {
+            for (int row = 0; row < grid.GetLength(0); row++)
+            {
+                for (int col = 0; col < grid.GetLength(1); col++)
+                {
+                    Console.Write(grid[row, col]);
+                }
+                Console.WriteLine();
+            }
         }
     }
 }
