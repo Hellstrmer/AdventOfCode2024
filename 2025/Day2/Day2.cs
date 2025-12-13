@@ -1,4 +1,5 @@
 ﻿using AdventOfCode.Helpers;
+using System;
 namespace AdventOfCode._2025
 {
     internal class Day2 : HelperClass
@@ -9,20 +10,23 @@ namespace AdventOfCode._2025
         public void FirstStar()
         {
             string Inputs = example ? ReadFileString(Example) : ReadFileString(Input);
-            List<String> Inp = Inputs.Split(',').ToList();
+            var Inp = Inputs.Split(',')
+                .Select(s => s.Split('-'))    
+                .Select(ID => (First: ulong.Parse(ID[0]), Second: ulong.Parse(ID[1])))    
+                .ToList();
             ulong res = 0;
             foreach(var s in Inp)
-            {
-                ulong firstID = ulong.Parse(s.Substring(0, s.IndexOf("-")));
-                ulong secondID = ulong.Parse(s.Substring(s.IndexOf("-") +1));
-
-                for (ulong i = firstID; i <= secondID; i++)
+            {                
+                for (ulong i = s.First; i <= s.Second; i++)
                 {
-                    string t = i.ToString();
-                    if (t.Length % 2 == 0)
+                    string ID = i.ToString();
+                    if (ID.Length % 2 == 0)
                     {
-                        ulong firsthalf = ulong.Parse(t.Substring(0, t.Length /2));
-                        ulong secondhalf = ulong.Parse(t.Substring(t.Length / 2));                        
+                        var Splited = ID.Chunk(ID.Length /2)
+                            .Select(IDs => ulong.Parse(new string(IDs)))
+                            .ToList();
+                        ulong firsthalf = Splited[0];
+                        ulong secondhalf = Splited[1];
                         if (firsthalf == secondhalf)  
                             res += i;                        
                     }
@@ -33,13 +37,14 @@ namespace AdventOfCode._2025
         public void SecondStar()
         {
             string Inputs = example ? ReadFileString(Example) : ReadFileString(Input);
-            List<String> Inp = Inputs.Split(',').ToList();
+            var Inp = Inputs.Split(',')
+                .Select(s => s.Split('-'))
+                .Select(ID => (First: ulong.Parse(ID[0]), Second: ulong.Parse(ID[1])))
+                .ToList();
             List<ulong> ResList = new List<ulong>();
             foreach (var s in Inp)
             {
-                ulong firstID = ulong.Parse(s.Substring(0, s.IndexOf("-")));
-                ulong secondID = ulong.Parse(s.Substring(s.IndexOf("-") + 1));
-                for (ulong i = firstID; i <= secondID; i++)
+                for (ulong i = s.First; i <= s.Second; i++)
                 {
                     string ID = i.ToString();
                     for (int j = ID.Length; j > 0; j--)
@@ -47,28 +52,13 @@ namespace AdventOfCode._2025
                         if (ID.Length % j == 0 && j > 1)
                         {
                             var Splited = ID.Chunk(ID.Length / j)
-                                .Select(chars => new string(chars))
-                                .ToList();                            
-                            bool Match = true;
-                            
+                                .Select(IDs => new string(IDs))
+                                .ToList();                             
                             if (Splited.All(ID => ID == Splited[0]))
                             {                    
                                 ResList.Add(i);                    
                                 break;                
-                            }
-                            //foreach (var part in Splited)
-                            //{
-                            //    if (part != Splited[0])
-                            //    {
-                            //        Match = false;
-                            //        break;
-                            //    }
-                            //}
-                            //if (Match)
-                            //{
-                            //    ResList.Add(i);
-                            //    break;
-                            //}
+                            }                            
                         }
                     }
                 }
