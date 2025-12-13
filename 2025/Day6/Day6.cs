@@ -6,7 +6,7 @@ namespace AdventOfCode._2025
     {
         string Example = "Example.txt";
         string Input = "Input.txt";
-        bool example = true;
+        bool example = false;
         public void FirstStar()
         {
             List<String> Inputs = example ? ReadFileList(Example) : ReadFileList(Input);
@@ -41,111 +41,38 @@ namespace AdventOfCode._2025
         public void SecondStar()
         {
             List<String> Inputs = example ? ReadFileList(Example) : ReadFileList(Input);
-            var Inp = Inputs.Where(x => !string.IsNullOrWhiteSpace(x))
-                .Select(x => x.Split(' ', StringSplitOptions.RemoveEmptyEntries)).ToList();
-
-            List<string> Operation = Inp.Last().ToList();
-            List<ulong> Results = new List<ulong>();
-            List<ulong> Cephalopod = new List<ulong>();
-            List<List<string>> sign = new List<List<string>>();
-            List<List<string>> resSign = new List<List<string>>();
-
-            for (int i = 0; i < Inp.Count; i++)
+            List<char[]> Inp = Inputs.Select(x => x.ToCharArray()).ToList();
+            List<string> resList = new List<string>();            
+            List<String> Operations = new List<string>();
+            List<ulong> Res = new List<ulong>();
+            int Index = 0;
+            foreach (char c in Inp.Last())
             {
-                ulong Numb = 0;
-                Cephalopod.Clear();
-                int longest = 0;
-                resSign.Add(new List<string>());
+                if (c == '*' || c == '+')                
+                    Operations.Add(c.ToString());                
+            }
+            for (int i = 0; i < Inp.Count -1; i++)
+            {
                 for (int j = 0; j < Inp[i].Length; j++)
                 {
-                    if (resSign.Count < Inp[i].Length)
-                    {
-                        resSign.Add(new List<string>());
-                    }
-
-                    sign.Add(new List<string>());
-                    var t = Inp[i];
-                    if (ulong.TryParse(Inp[i][j].ToString(), out Numb))
-                    {
-                        if (Inp[i][j].Count() > longest)
-                        {
-                            longest = Inp[i][j].Count();
-                        }
-                        Inp[i] = Fillempty(Inp[i], longest, Operation[j]);
-                        var b = Inp[i][j];
-
-                        sign[j].Clear();
-                        for (int m = 0; m < b.Count(); m++)
-                        {
-                            sign[j].Add(b[m].ToString());
-                        }
-
-
-                        Cephalopod.Add(Numb);
-                    }
-                }
-                for (int k = 0; k < Operation.Count; k++)
-                {
-                    for (int n = 0; n < sign[k].Count; n++)
-                    {
-                        if (resSign[k].Count < sign[k].Count)
-                        {
-                            if (Operation[k] == "*")
-                            {
-                                resSign[k].Add("");
-                            } 
-                            else
-                            {
-                                resSign[k].Add("");
-                            }
-                        }                        
-                        if (Operation[k] == "*")
-                        {
-                            resSign[k][n] += sign[k][n].ToString();
-                            var t = ulong.Parse(sign[k][n].ToString());
-                        }
-                        else
-                        {
-                            resSign[k][n] += sign[k][n].ToString();
-                            var t = ulong.Parse(sign[k][n].ToString());
-                        }
-
-                    }
-
-                    if (Results.Count < Operation.Count)
-                        Results.Add((ulong)(Operation[k] == "*" ? 1 : 0));
-                    if (Cephalopod.Count > 0)
-                        Results[k] = Operation[k] == "+" ? Results[k] += Cephalopod[k] : Results[k] *= Cephalopod[k];
-                }
+                    if (i == 0)                    
+                        resList.Add(Inp[i][j].ToString());                    
+                    else 
+                        resList[j] += Inp[i][j].ToString();
+                }                
             }
-            Console.WriteLine(resSign);
-            Console.WriteLine(Results.Sum(r => (decimal)r));
-        }
-
-        public string[] Fillempty(string[] fillArr, int length, string Operation)
-        {
-            for (int i = 0; i < fillArr.Length; i++)
+            Res.Add(1);
+            for (int i = 0; i < resList.Count; i++)
             {
-                if (fillArr[i].Length > length)
+                if (!ulong.TryParse(resList[i], out ulong resUlong))
                 {
-                    length = fillArr[i].Length;
+                    Index++;
+                    Res.Add(Operations[Index] == "*" ? (ulong)1 : (ulong)0);
+                    continue;
                 }
+                Res[Index] = Operations[Index] == "*" ? Res[Index] * resUlong : Res[Index] + resUlong;                        
             }
-            for (int i = 0; i < fillArr.Length; i++)
-            {
-                if (fillArr[i].Length < length)
-                {
-                    if (Operation == "*")
-                    {
-                        fillArr[i] = fillArr[i].Insert(0, "");
-                    } 
-                    else
-                    {
-                        fillArr[i] = fillArr[i].Insert(0, "");
-                    }
-                }
-            }
-            return fillArr;
-        }
+            Console.WriteLine(Res.Sum(r => (decimal)r));
+        }        
     }
 }
