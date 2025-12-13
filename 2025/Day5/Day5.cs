@@ -8,130 +8,44 @@ namespace AdventOfCode._2025
         bool example = false;
         public void FirstStar()
         {
-            List<String> Inputs = example ? ReadFileList(Example) : ReadFileList(Input);
-            int res = 0;
-            List<ulong> StartID = new List<ulong>();
-            List<ulong> EndID = new List<ulong>();
-            List<ulong> ID = new List<ulong>();
-            foreach (String s in Inputs)
-            {
-                if (s.Contains('-'))
-                {
-                    StartID.Add(ulong.Parse(s.Substring(0, s.IndexOf('-'))));
-                    EndID.Add(ulong.Parse(s.Substring(s.IndexOf('-') + 1)));
-                }
-                else if (!s.Contains("-") && s.Length > 0)
-                    ID.Add(ulong.Parse(s));
-            }
-
-            for (int i = 0; i < ID.Count; i++)
-            {
-                for (int j = 0; j < StartID.Count; j++)
-                {
-
-                    if (ID[i] >= StartID[j] && ID[i] <= EndID[j])
-                    {
-                        res++; break;
-                    }
-                }
-            }
-            Console.WriteLine(res);
+            var (Ranges, ID) = GetInput();
+            Console.WriteLine(ID.Count(fresh => Ranges.Any(r => fresh >= r.Start && fresh <= r.End)));            
         }
         public void SecondStar()
         {
-            List<String> Inputs = example ? ReadFileList(Example) : ReadFileList(Input);
-            ulong res = 0;
-            List<List<ulong>> IDs = new List<List<ulong>>();
-            List<ulong> FreshIDStart = new List<ulong>();
-            List<ulong> FreshIDEnd = new List<ulong>();
-            List<ulong> resID = new List<ulong>();
-            ulong sID = 0;
-            ulong eID = 0;
-            List<ulong> StartID = new List<ulong>();
-            List<ulong> EndID = new List<ulong>();
-            var Ranges = new List<(ulong Start, ulong End)>();
+            var (Ranges, ID) = GetInput();
             var FreshRanges = new List<(ulong Start, ulong End)>();
-            foreach (String s in Inputs)
-            {
-                if (s.Contains('-'))
-                {
-                    var start = ulong.Parse(s.Substring(0, s.IndexOf('-')));
-                    var end = ulong.Parse(s.Substring(s.IndexOf('-') + 1));
-                    Ranges.Add((start, end));
-                }
-            }
-            Ranges = Ranges.OrderBy(r => r.Start).ToList();
             FreshRanges.Add(Ranges[0]);
-            //FreshIDEnd.Add(Ranges[0].End);
-            FreshIDStart.Add(Ranges[0].Start);
-            FreshIDEnd.Add(Ranges[0].End);
-
-            //for (int i = 1; i < Ranges.Count; i++)
-            //{
-            //    for (int j = 0; j < FreshRanges.Count; j++)
-            //    {
-            //        if (Ranges[i].Start > FreshRanges[j].Start && Ranges[i].Start < FreshRanges[j].End && Ranges[i].End > FreshRanges[j].End)
-            //        {
-            //            var resl = (FreshRanges[j].Start, Ranges[i].End);
-            //            FreshRanges[j] = resl;
-            //            break;
-            //        }
-            //        else
-            //        {
-            //            FreshRanges.Add(Ranges[i]);
-            //            break;
-            //        }
-            //    }
-
-            //}
-
-            for (int i = 0; i < Ranges.Count; i++)
+            for (int i = 1; i < Ranges.Count; i++)
             {
-                for (int k = 0; k < FreshIDStart.Count; k++)
+                for (int j = 0; j < FreshRanges.Count; j++)
                 {
-
-                    if (Ranges[i].Start < FreshIDStart[k] && EndID[i] <= FreshIDStart[k])
+                    var actual = FreshRanges[j];
+                    if (Ranges[i].End > FreshRanges[j].End && Ranges[i].Start <= FreshRanges[j].End)
                     {
-                        FreshIDStart.Add(Ranges[i].Start);
-                        FreshIDEnd.Add(Ranges[i].End);
-                        break;
+                        actual.End = Ranges[i].End;
+                        if (!FreshRanges.Contains(actual))
+                            FreshRanges[j] = actual;
                     }
-                    if (Ranges[i].Start > FreshIDStart[k] && Ranges[i].End >= FreshIDStart[k])
-                    {
-                        FreshIDStart.Add(Ranges[i].Start);
-                        FreshIDEnd.Add(Ranges[i].End);
-                        break;
-                    }
-
-
-                    //if (StartID[i] > FreshIDStart[k] && EndID[i] > FreshIDStart[k])
-                    //{
-                    //    FreshIDStart.Add(StartID[i]);
-                    //    FreshIDEnd.Add(EndID[i]);
-                    //    break;
-                    //}
-
-                    //for (ulong j = StartID[i]; j <= EndID[i]; j++)
-                    //{
-
-                    //    //if (!Fresh.Contains(j))
-                    //    //{
-                    //    //    Fresh.Add(j);
-                    //    //}
-                    //}
-                }
-
-            }
-
-            for (int i = 0; i < FreshIDStart.Count; i++)
-            {
-                for (ulong j = FreshIDStart[i]; j <= FreshIDEnd[i]; j++)
-                {
-                    if(!resID.Contains(j))
-                        resID.Add(j);
+                    else if (j == FreshRanges.Count - 1 && !(Ranges[i].Start >= FreshRanges[j].Start && Ranges[i].End <= FreshRanges[j].End))
+                        FreshRanges.Add(Ranges[i]);
                 }
             }
-            Console.WriteLine(resID.Count);
-        }       
+            Console.WriteLine(FreshRanges.Sum(r => (decimal)r.End - r.Start + 1));
+        }
+        public (List<(ulong Start, ulong End)> Ranges, List<ulong> ID) GetInput()
+        {
+            var Inputs = example ? ReadFileList(Example) : ReadFileList(Input);
+            var Ranges = Inputs
+                .Where(s => s.Contains('-'))
+                .Select(s => s.Split('-'))
+                .Select(IDs => (Start: ulong.Parse(IDs[0]), End: ulong.Parse(IDs[1])))
+                .OrderBy(s => s.Start)
+                .ToList();
+            var ID = Inputs.Where(s => !s.Contains('-') && s.Length > 0)
+                .Select(s => ulong.Parse(s))
+                .ToList();
+            return (Ranges, ID);
+        }
     }
 }
