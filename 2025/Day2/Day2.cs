@@ -5,7 +5,7 @@ namespace AdventOfCode._2025
     {
         string Example = "Example.txt";
         string Input = "Input.txt";
-        bool example = true;
+        bool example = false;
         public void FirstStar()
         {
             string Inputs = example ? ReadFileString(Example) : ReadFileString(Input);
@@ -34,48 +34,46 @@ namespace AdventOfCode._2025
         {
             string Inputs = example ? ReadFileString(Example) : ReadFileString(Input);
             List<String> Inp = Inputs.Split(',').ToList();
-            ulong res = 0;
+            List<ulong> ResList = new List<ulong>();
             foreach (var s in Inp)
             {
                 ulong firstID = ulong.Parse(s.Substring(0, s.IndexOf("-")));
                 ulong secondID = ulong.Parse(s.Substring(s.IndexOf("-") + 1));
-
                 for (ulong i = firstID; i <= secondID; i++)
                 {
-                    string t = i.ToString();
-                    for (int j = 0; j < t.Length; j += 1)
+                    string ID = i.ToString();
+                    for (int j = ID.Length; j > 0; j--)
                     {
-                        string match = t.Substring(j, 1);
-                        string rest = t.Substring(j + 1);
-                        if (t.Length > 2 && j < t.Length - 1)
+                        if (ID.Length % j == 0 && j > 1)
                         {
-                            match = t.Substring(j, 2);
-                            rest = t.Substring(j + 1);
+                            var Splited = ID.Chunk(ID.Length / j)
+                                .Select(chars => new string(chars))
+                                .ToList();                            
+                            bool Match = true;
+                            
+                            if (Splited.All(ID => ID == Splited[0]))
+                            {                    
+                                ResList.Add(i);                    
+                                break;                
+                            }
+                            //foreach (var part in Splited)
+                            //{
+                            //    if (part != Splited[0])
+                            //    {
+                            //        Match = false;
+                            //        break;
+                            //    }
+                            //}
+                            //if (Match)
+                            //{
+                            //    ResList.Add(i);
+                            //    break;
+                            //}
                         }
-                        bool matchFound = true;
-                        for (int k = 2; k < t.Length / 2; k++)
-                        {
-                            match = t.Substring(j, k);
-                            //if (match = )
-                        }
-                        if (rest.Contains(match))
-                        {
-                            Console.WriteLine(t);
-                            res += i;
-                            break;
-                        }
-
-
                     }
-
-                    //ulong firsthalf = ulong.Parse(t.Substring(0, t.Length / 2));
-                    //ulong secondhalf = ulong.Parse(t.Substring(t.Length / 2));
-                    //if (firsthalf == secondhalf)
-                    //    res += i;
-                    //}
                 }
             }
-            Console.WriteLine(res);
+            Console.WriteLine(ResList.Sum(r => (decimal)r));
         }
     }
 }
