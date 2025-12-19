@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
-namespace AdventOfCode._2025
+namespace AdventOfCode._2021
 {
     internal class Day10() : HelperClass
     {
