@@ -11,7 +11,6 @@ namespace AdventOfCode._2021
         public void FirstStar()
         {
             List<string> Inputs = example ? ReadFileList(Example) : ReadFileList(Input);
-            int res = 0;
             var Inp = Inputs
                 .Where(s => s.Contains(' '))
                 .Select(s => s.Split(' '))
@@ -19,7 +18,6 @@ namespace AdventOfCode._2021
                 .ToList();
             int Horizontal = 0;
             int Depth = 0;
-            int Aim = 0;
             foreach (var d in Inp)
             {
                 if (d.Dir == "forward")
@@ -34,7 +32,6 @@ namespace AdventOfCode._2021
         public void SecondStar()
         {
             List<string> Inputs = example ? ReadFileList(Example) : ReadFileList(Input);
-            int res = 0;
             var Inp = Inputs
                 .Where(s => s.Contains(' '))
                 .Select(s => s.Split(' '))
@@ -51,15 +48,9 @@ namespace AdventOfCode._2021
                     Depth += Aim * d.Distance;
                 }
                 else if (d.Dir == "down")
-                {
-                    //Depth += d.Distance;
                     Aim += d.Distance;
-                }
                 else
-                {
-                    //Depth -= d.Distance;
                     Aim -= d.Distance;
-                }
             }
             Console.WriteLine(Horizontal * Depth);
         }
