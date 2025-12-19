@@ -1,9 +1,9 @@
 
-using AdventOfCode._2016;
+using AdventOfCode._2025;
 using AdventOfCode.Helpers;
 
 HelperClass helper = new HelperClass();
-Day1 Day = new Day1();
+Day10 Day = new Day10();
 
 Console.WriteLine("Part1: ");
 Day.FirstStar();
