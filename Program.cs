@@ -3,7 +3,7 @@ using AdventOfCode._2021;
 using AdventOfCode.Helpers;
 
 HelperClass helper = new HelperClass();
-Day1 Day = new Day1();
+Day2 Day = new Day2();
 
 Console.WriteLine("Part1: ");
 Day.FirstStar();
