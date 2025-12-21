@@ -7,7 +7,6 @@ namespace AdventOfCode._2021
         string Example = "Example.txt";
         string Input = "Input.txt";
         bool example = false;
-
         public void FirstStar()
         {
             List<string> Inputs = example ? ReadFileList(Example) : ReadFileList(Input);
