@@ -24,7 +24,7 @@ namespace AdventOfCode._2024
             {
                 ReturnList = Blink(list);
             }
-            Console.WriteLine("Stones: " + ReturnList.Count)
+            Console.WriteLine("Stones: " + ReturnList.Count);
             stopwatch.Stop();
             Console.WriteLine($"Elapsed Time: {stopwatch.Elapsed.TotalSeconds}:F2");
         }
