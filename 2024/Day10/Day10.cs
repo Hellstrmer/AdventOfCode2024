@@ -19,8 +19,8 @@ namespace AdventOfCode._2024
             //Reading out a grid
             bool example = true;
             string[] input = File.ReadAllLines(example
-                ? "C:\\Users\\clj608\\Source\\Repos\\Hellstrmer\\AdventOfCode2025\\2024\\Day10\\Example.txt"
-                : "C:\\Users\\clj608\\Source\\Repos\\Hellstrmer\\AdventOfCode2025\\2024\\Day10\\Input.txt");
+                ? "C:\\Users\\jespe\\Source\\Repos\\Hellstrmer\\AdventOfCode2024\\2024\\Day10\\Example.txt"
+                : "C:\\Users\\jespe\\Source\\Repos\\Hellstrmer\\AdventOfCode2024\\2024\\Day10\\Input.txt");
 
             _width = input[0].Length;
             _height = input.Length;
@@ -39,9 +39,9 @@ namespace AdventOfCode._2024
         {
             ReadFile();
             List<int> Matches = new List<int>();
+            List<Point> Path = new List<Point>();
             HashSet<Point> FoundPoints = new HashSet<Point>();
             HashSet<Point> FoundPointsZero = new HashSet<Point>();
-            HashSet<Point> StartStop = new HashSet<Point>();
             Point Zero = new Point();
             matches = 1;
             int res = 0;
@@ -57,16 +57,17 @@ namespace AdventOfCode._2024
                     {
                         FoundPointsZero.Add(new Point(x, y));
                         ZeroPoint = new Point(x, y);
-                        StartStop.Clear();
-                        StartStop.Add(ZeroPoint);
+                        Path.Clear();
 
                     }
                     if (TP && t == Dir)
                     {
-                        StartStop.Clear();
+                        Path.Add(ZeroPoint);
                         Dir++;
                         Zero = new Point(x, y);
-                        ResultDone = CheckPath(Zero, Dir, FoundPoints, StartStop);
+                        Path.Add(Zero);
+                        ResultDone = CheckPath(Zero, Dir, Path);
+                        Console.WriteLine("ResultInt: " + ResultInt);
                         if (ResultInt == 23)
                         {
                             Console.WriteLine("Numbers In: " + ResultInt);
@@ -74,14 +75,13 @@ namespace AdventOfCode._2024
                         if (ResultDone)
                         {
                             Dir = 0;
-                            StartStop.Clear();
                         }                 
                     }
                 }                
             }
             Console.WriteLine("Numbers: " + ResultInt);
         }
-        private bool CheckPath(Point point, int FindNumbers, HashSet<Point> FoundPoints, HashSet<Point> StartStop)
+        private bool CheckPath(Point point, int FindNumbers, List<Point> Path)
         {
             bool done = false;
             int res = 0;
@@ -116,66 +116,84 @@ namespace AdventOfCode._2024
                 bPy2 = Int32.TryParse(_grid[pY2.X, pY2.Y].ToString(), out IPy2);
             }                    
                         
-            if (!OutOfBound(pX1) && bPx1 && IPx1 == FindNumbers && !(StartStop.Contains(pX1) && StartStop.Contains(ZeroPoint)))
+            if (!OutOfBound(pX1) && bPx1 && IPx1 == FindNumbers && CheckPathStorage(pX1, Path))
             {
                 res++;
                 Points.Add(pX1);
-                if (FindNumbers == 9)
-                {
-                    StartStop.Add(pX1);
-                }
+                Path.Add(pX1);
             }
-            if (!OutOfBound(pX2) && bPx2 && IPx2 == FindNumbers && !(StartStop.Contains(pX2) && StartStop.Contains(ZeroPoint)))
+            if (!OutOfBound(pX2) && bPx2 && IPx2 == FindNumbers && CheckPathStorage(pX2, Path))
             {
                 res++;
                 Points.Add(pX2);
-                if (FindNumbers == 9)
-                {
-                    StartStop.Add(pX2);
-                }
+                Path.Add(pX2);                
             }
-            if (!OutOfBound(pY1) && bPy1 && IPy1 == FindNumbers && !(StartStop.Contains(pY1) && StartStop.Contains(ZeroPoint)))
+            if (!OutOfBound(pY1) && bPy1 && IPy1 == FindNumbers && CheckPathStorage(pY1, Path))
             {
                 res++;
                 Points.Add(pY1);
-                if (FindNumbers == 9)
-                {
-                    StartStop.Add(pY1);
-                }
+                Path.Add(pY1);
             }
-            if (!OutOfBound(pY2) && bPy2 && IPy2 == FindNumbers && !(StartStop.Contains(pY2) && StartStop.Contains(ZeroPoint)))
+            if (!OutOfBound(pY2) && bPy2 && IPy2 == FindNumbers && CheckPathStorage(pY2, Path))
             {
                 res++;
                 Points.Add(pY2);
-                if(FindNumbers == 9)
-                {
-                    StartStop.Add(pY2);
-                }
+                Path.Add(pY2);
             }
 
             if (FindNumbers == 9)
             {                
                 ResultInt += res;
                 FindNumbers = 0;
-                done = true;
+                //done = true;
                 //Console.WriteLine("Res: " + res);
+                
                 return done;
             }
-            FindNumbers++; 
-            
-            if (!done)
+            FindNumbers++;
+
+            //if (!done)
+            //{
+            foreach (var p in Points)
             {
-                foreach (var p in Points)
-                {
-                    //Console.WriteLine("Points: " + res + " " +FindNumbers);
-                    bool temp = CheckPath(p, FindNumbers, FoundPoints, StartStop);
-                }
+                var newPath = new List<Point>(Path);
+                newPath.Add(p);
+                bool temp = CheckPath(p, FindNumbers, newPath);
             }
-            
+
+            //}
+
             matches = res;
-            return false;
+            return done;
         }   
 
+        private void CheckValidPoint(Point p, int FindNumbers, List<Point> Points, List<Point> Path)
+        {
+            //if(!OutOfBound(p) && )
+        }
+
+        private bool CheckPathStorage(Point p, List<Point> path)
+        {
+            bool Found = false;/*
+            if (p.X == 4 && p.Y == 3)
+            {
+                Console.WriteLine("P!");
+            } */
+            foreach (Point p2 in path)
+            {
+                if(p.Equals(p2))
+                {
+                    Found = false;
+                    break;
+                }
+                else
+                {
+                    Found = true;
+                }
+            }
+
+            return Found;
+        }
         private bool OutOfBound(Point ControlPoint)
         {
             return ControlPoint.X > _width - 1 || ControlPoint.X < 0 || ControlPoint.Y > _height - 1 || ControlPoint.Y < 0;

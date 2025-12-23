@@ -10,7 +10,7 @@ namespace AdventOfCode._2024
             bool example = false;
             string input = File.ReadAllText(example
                 ? "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day4\\Example.txt".Trim()
-                : "C:\\Users\\jespe\\source\\repos\\AdventOfCode\\2024\\Day4\\Input.txt").Trim();
+                : "C:\\Users\\jespe\\Source\\Repos\\Hellstrmer\\AdventOfCode2024\\2024\\Day4\\Input.txt").Trim();
             List<string> Inputs = input.Split("\r\n").ToList();
             return Inputs;
         }
