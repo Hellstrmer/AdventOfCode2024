@@ -1,8 +1,6 @@
 ﻿using AdventOfCode.Helpers;
-using System;
-using System.Drawing;
 using System.Text.RegularExpressions;
-namespace AdventOfCode._2021
+namespace AdventOfCode._2025
 {
     internal class Day10() : HelperClass
     {
