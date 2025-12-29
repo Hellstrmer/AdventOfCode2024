@@ -43,6 +43,23 @@
             }
             return (grid, width, height);
         }
+        public (int[,] grid, int width, int height) ReadgridInt(String[] Inputs)
+        {
+            int[,]? grid;
+            int width = Inputs[0].Length;
+            int height = Inputs.Length;
+            grid = new int[height, width];
+            for (var y = 0; y < height; y++)
+            {
+                var line = Inputs[y];
+                for (var x = 0; x < width; x++)
+                {
+                    var character = line[x] - '0';
+                    grid[y, x] = character;
+                }
+            }
+            return (grid, width, height);
+        }
 
         public void ShowGrid(char[,] grid)
         {
@@ -54,6 +71,19 @@
                 }
                 Console.WriteLine();
             }
+            Console.WriteLine();
+        }
+        public void ShowGridInt(int[,] grid)
+        {
+            for (int row = 0; row < grid.GetLength(0); row++)
+            {
+                for (int col = 0; col < grid.GetLength(1); col++)
+                {
+                    Console.Write(grid[row, col]);
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
         }
     }
 }
