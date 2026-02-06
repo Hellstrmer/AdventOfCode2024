@@ -3,39 +3,54 @@ using System;
 using System.Drawing;
 namespace AdventOfCode._2016
 {
-    internal class Day1() : HelperClass
+    internal class Day2() : HelperClass
     {
         string Example = "Example.txt";
         string Input = "Input.txt";
-        bool example = false;
+        bool example = true;
         public void FirstStar()
         {
-            var Inputs = example ? ReadFileString(Example) : ReadFileString(Input);
-            var inp = Inputs.Split(',').ToList();
-            int x = 0;
-            int y = 0;
-            int direction = 0;
-            foreach (var Input in inp)
+            var Inputs = example ? ReadFileList(Example) : ReadFileList(Input);
+            //var inp = Inputs.Split('').ToList();
+
+            var t = new Dictionary<string, int>();
+            var Numbers = new List<int>()
             {
-                var str = Input.Trim();
-                var dir = str[0].ToString().Trim();
-                var distance = Int32.Parse(str.Substring(1));
+                1, 2, 3, 4, 5, 6, 7, 8, 9
+            };
 
-                if ( dir == "R") 
-                    direction = (direction +1 ) % 4;
-                else                
-                    direction = (direction -1 + 4) % 4;
+            var start = 4;
 
-                if (direction == 0)
-                    y += distance;
-                else if (direction == 1)
-                    x += distance;
-                else if (direction == 2)
-                    y -= distance;
-                else 
-                    x -= distance;      
-            }            
-            Console.WriteLine(Math.Abs(x) + Math.Abs(y));
+            // U = Up
+            // D = Down
+            // R = Right
+            // L = Left
+            string Code = "";
+            foreach (var input in Inputs)
+            {
+                foreach (var press in input)
+                {
+                    if (press == 'U' && start - 3 >= 0)
+                    {
+                        start -= 3;
+                    }
+                    else if (press == 'D' && start + 3 <= 8)
+                    {
+                        start += 3;
+                    }
+                    else if (press == 'R' && start + 1 <= 8)
+                    {
+                        start += 1;
+                    }
+                    else if (press == 'L' && start - 1 >= 0)
+                    {
+                        start -= 1;
+                    }
+                }
+                Code += Numbers[start].ToString();
+            }
+                
+            Console.WriteLine(Code);
         }
 
 
